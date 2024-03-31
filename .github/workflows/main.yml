@@ -1,10 +1,26 @@
 on: [push, pull_request]
 jobs:
+  validate:
+    runs-on: ubuntu-latest
+    name: Validate Terraform module
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: terraform validate
+        uses: dflook/terraform-validate@v1
+        id: validate
+
+      - name: Validate failed
+        if: ${{ failure() && steps.validate.outputs.failure-reason == 'validate-failed' }}
+        run: echo "terraform validate failed"
+
   lint:
     runs-on: ubuntu-latest
     steps:
     - name: Check out code
       uses: actions/checkout@main
+      
     - name: Lint Terraform
       uses: terraform-linters/setup-tflint@v4
       with:
@@ -17,22 +33,6 @@ jobs:
     - run: echo ${{ steps.tflint.outputs.stderr }}
     - run: echo ${{ steps.tflint.outputs.exitcode }}
 
-  validate:
-    runs-on: ubuntu-latest
-    name: Validate Terraform module
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: terraform validate
-        uses: dflook/terraform-validate@v1
-        id: validate
-        with:
-          path: my-terraform-config
-
-      - name: Validate failed
-        if: ${{ failure() && steps.validate.outputs.failure-reason == 'validate-failed' }}
-        run: echo "terraform validate failed"
   deploy:
     name: 'Terraform'
     runs-on: ubuntu-latest
