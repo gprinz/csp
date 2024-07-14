@@ -35,7 +35,7 @@ resource "azurerm_data_factory_dataset_parquet" "transactions_source" {
 
 resource "azurerm_data_factory_pipeline" "pipeline" {
   name            = "data-pipeline"
-  data_factory_id = azurerm_data_factory.example.id
+  data_factory_id = azurerm_data_factory.data_factory.id
 
   activities_json = <<JSON
   [
@@ -74,7 +74,7 @@ resource "azurerm_data_factory_pipeline" "pipeline" {
 # Data Factory Trigger for Daily Execution
 resource "azurerm_data_factory_trigger_schedule" "daily_trigger" {
   name            = "daily-trigger"
-  data_factory_id = azurerm_data_factory.example.id
+  data_factory_id = azurerm_data_factory.data_factory.id
 
   pipeline_name = azurerm_data_factory_pipeline.pipeline.name
 
