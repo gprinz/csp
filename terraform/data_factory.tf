@@ -20,13 +20,13 @@ resource "azurerm_data_factory" "df" {
 }
 
 resource "azurerm_data_factory_linked_service_azure_blob_storage" "source" {
-  name              = "Open Data"
-  data_factory_id   = azurerm_data_factory.df.id
-  connection_string = "DefaultEndpointsProtocol=https;AccountName=azureopendatastorage;EndpointSuffix=blob.core.windows.net"
+  name            = "Open_Data"
+  data_factory_id = azurerm_data_factory.df.id
+  sas_uri         = "https://azureopendatastorage.blob.core.windows.net/"
 }
 
 resource "azurerm_data_factory_dataset_parquet" "source_parquet" {
-  name                = "source-parquet"
+  name                = "Taxi_Data_Open_Data"
   data_factory_id     = azurerm_data_factory.df.id
   linked_service_name = azurerm_data_factory_linked_service_azure_blob_storage.source.name
 
@@ -37,8 +37,62 @@ resource "azurerm_data_factory_dataset_parquet" "source_parquet" {
 }
 
 resource "azurerm_data_factory_linked_service_data_lake_storage_gen2" "destination" {
-  name                 = "destination-parquet"
+  name                 = "Data_Lake"
   data_factory_id      = azurerm_data_factory.df.id
   url                  = "https://${azurerm_storage_account.datalake.name}.blob.core.windows.net/"
   use_managed_identity = true
+}
+
+resource "azurerm_data_factory_dataset_parquet" "destination_parquet" {
+  name                = "Taxi_Data_Lake"
+  data_factory_id     = azurerm_data_factory.df.id
+  linked_service_name = azurerm_data_factory_linked_service_data_lake_storage_gen2.destination.name
+
+  azure_blob_storage_location {
+    container = "nyctlc"
+    path      = "yellow/"
+  }
+}
+
+# Pipeline
+resource "azurerm_data_factory_pipeline" "example_pipeline" {
+  name            = "laod-taxi-data"
+  data_factory_id = azurerm_data_factory.example.name
+
+  dynamic "activity" {
+    for_each = [
+      {
+        name    = "GetMetadata"
+        type    = "GetMetadata"
+        inputs  = [azurerm_data_factory_dataset_azure_data_lake_storage_gen2.source_dataset.id]
+        outputs = []
+        settings = jsonencode({
+          fieldList = ["Child Items"]
+        })
+      },
+      {
+        name = "ForEach"
+        type = "ForEach"
+        settings = jsonencode({
+          items = "@activity('GetMetadata').output.childItems"
+        })
+        activities = [
+          {
+            name    = "CopyData"
+            type    = "Copy"
+            inputs  = [azurerm_data_factory_dataset_parquet.source_parquet.id]
+            outputs = [azurerm_data_factory_dataset_azure_blob.destination_dataset.id]
+            settings = jsonencode({
+              source = {
+                type = "ParquetSource"
+              },
+              sink = {
+                type = "BlobSink"
+              }
+            })
+          }
+        ]
+      }
+    ]
+  }
 }

@@ -94,7 +94,7 @@ resource "azurerm_key_vault_key" "kv_key" {
     "sign",
     "unwrapKey",
     "verify",
-    "wrapKey",
+    "wrapKey"
   ]
 
   depends_on = [
@@ -105,7 +105,7 @@ resource "azurerm_key_vault_key" "kv_key" {
 
 # Machine learning workspace configuration
 resource "azurerm_machine_learning_workspace" "ml_workspace" {
-  name                    = "workspace-${local.current_year}-ch"
+  name                    = "fstore-${local.current_year}-ch"
   location                = azurerm_resource_group.ml_rg.location
   resource_group_name     = azurerm_resource_group.ml_rg.name
   application_insights_id = azurerm_application_insights.ai.id
@@ -116,6 +116,24 @@ resource "azurerm_machine_learning_workspace" "ml_workspace" {
   feature_store {
     computer_spark_runtime_version = "3.1"
   }
+
+  identity {
+    type = "SystemAssigned"
+  }
+
+  encryption {
+    key_vault_id = azurerm_key_vault.kv.id
+    key_id       = azurerm_key_vault_key.kv_key.id
+  }
+}
+
+resource "azurerm_machine_learning_workspace" "ml_workspace" {
+  name                    = "workspace-${local.current_year}-ch"
+  location                = azurerm_resource_group.ml_rg.location
+  resource_group_name     = azurerm_resource_group.ml_rg.name
+  application_insights_id = azurerm_application_insights.ai.id
+  key_vault_id            = azurerm_key_vault.kv.id
+  storage_account_id      = azurerm_storage_account.ml.id
 
   identity {
     type = "SystemAssigned"
