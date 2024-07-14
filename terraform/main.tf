@@ -10,7 +10,7 @@ terraform {
 provider "azurerm" {
   features {
     key_vault {
-      purge_soft_delete_on_destroy = false
+      purge_soft_delete_on_destroy = true
     }
   }
 }
@@ -48,7 +48,7 @@ resource "azurerm_application_insights" "ai" {
 
 # Key Vault configuration
 resource "azurerm_key_vault" "kv" {
-  name                     = "kv-${local.current_year}-ch-2"
+  name                     = "kv-${local.current_year}-ch-3"
   location                 = azurerm_resource_group.ml_rg.location
   resource_group_name      = azurerm_resource_group.ml_rg.name
   tenant_id                = data.azurerm_client_config.current.tenant_id
@@ -67,11 +67,18 @@ resource "azurerm_storage_account" "ml" {
 
 # Storage account configuration
 resource "azurerm_storage_account" "raw_data" {
-  name                     = "sarawdata${local.current_year}ch"
-  location                 = azurerm_resource_group.ml_rg.location
-  resource_group_name      = azurerm_resource_group.ml_rg.name
+  name                     = "raw-data"
+  location                 = azurerm_resource_group.rg_prod.location
+  resource_group_name      = azurerm_resource_group.rg_prod.name
   account_tier             = "Standard"
   account_replication_type = "LRS"
+}
+
+// Define a container called "taxi" in the Azure Storage Account
+resource "azurerm_storage_container" "taxi" {
+  name                  = "taxi"
+  storage_account_name  = azurerm_storage_account.datalake.name
+  container_access_type = "private"
 }
 
 # Key Vault access policy

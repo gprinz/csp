@@ -7,13 +7,6 @@ resource "azurerm_storage_account" "datalake" {
   account_replication_type = "LRS"
 }
 
-// Define a container called "taxi" in the Azure Storage Account
-resource "azurerm_storage_container" "taxi" {
-  name                  = "taxi"
-  storage_account_name  = azurerm_storage_account.datalake.name
-  container_access_type = "private"
-}
-
 # Create Data Lake Gen2 Filesystem
 resource "azurerm_storage_data_lake_gen2_filesystem" "dl_fs" {
   name               = "dlfs-${local.current_year}-ch"
