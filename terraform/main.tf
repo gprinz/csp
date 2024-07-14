@@ -1,12 +1,3 @@
-terraform {
-  backend "remote" {
-    organization = "CSP-ETH"
-    workspaces {
-      name = "PROD"
-    }
-  }
-}
-
 provider "azurerm" {
   features {
     key_vault {
@@ -63,6 +54,28 @@ resource "azurerm_storage_account" "storage" {
   resource_group_name      = azurerm_resource_group.ml_rg.name
   account_tier             = "Standard"
   account_replication_type = "GRS"
+}
+
+# Key Vault key
+resource "azurerm_key_vault_key" "kv_key" {
+  name         = "kv-key-${random_id.id.hex}"
+  key_vault_id = azurerm_key_vault.kv.id
+  key_type     = "RSA"
+  key_size     = 2048
+
+  key_opts = [
+    "decrypt",
+    "encrypt",
+    "sign",
+    "unwrapKey",
+    "verify",
+    "wrapKey",
+  ]
+
+  depends_on = [
+    azurerm_key_vault.kv,
+    azurerm_key_vault_access_policy.kv_access
+  ]
 }
 
 # Machine learning workspace configuration
