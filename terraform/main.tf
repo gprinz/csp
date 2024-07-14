@@ -67,7 +67,7 @@ resource "azurerm_storage_account" "ml" {
 
 # Storage account configuration
 resource "azurerm_storage_account" "raw_data" {
-  name                     = "data"
+  name                     = "data2"
   location                 = azurerm_resource_group.rg_prod.location
   resource_group_name      = azurerm_resource_group.rg_prod.name
   account_tier             = "Standard"
