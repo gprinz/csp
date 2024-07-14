@@ -74,7 +74,7 @@ resource "azurerm_key_vault_key" "kv_key" {
 
   depends_on = [
     azurerm_key_vault.kv,
-    azurerm_key_vault_access_policy.kv_access
+    #azurerm_key_vault_access_policy.kv_access
   ]
 }
 
