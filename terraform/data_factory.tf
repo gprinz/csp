@@ -33,54 +33,54 @@ resource "azurerm_data_factory_dataset_parquet" "transactions_source" {
 
 }
 
-resource "azurerm_data_factory_pipeline" "pipeline" {
-  name            = "data-pipeline"
-  data_factory_id = azurerm_data_factory.data_factory.id
-
-  activities_json = <<JSON
-  [
-    {
-      "name": "CopyFromBlobToADLS",
-      "type": "Copy",
-      "dependsOn": [],
-      "typeProperties": {
-        "source": {
-          "type": "ParquetSource"
-        },
-        "sink": {
-          "type": "AzureDataLakeStoreSink",
-          "linkedServiceName": {
-            "referenceName": "${azurerm_data_factory_linked_service_azure_data_lake_store.adls.name}",
-            "type": "LinkedServiceReference"
-          }
-        }
-      },
-      "inputs": [
-        {
-          "referenceName": "${azurerm_data_factory_dataset_parquet.transactions_source.name}",
-          "type": "DatasetReference"
-        }
-      ],
-      "outputs": [
-        {
-          "referenceName": "${azurerm_data_factory_dataset_parquet.transactions_source.name}",
-          "type": "DatasetReference"
-        }
-      ]
-    }
-  ]
-  JSON
-}
-# Data Factory Trigger for Daily Execution
-resource "azurerm_data_factory_trigger_schedule" "daily_trigger" {
-  name            = "daily-trigger"
-  data_factory_id = azurerm_data_factory.data_factory.id
-
-  pipeline_name = azurerm_data_factory_pipeline.pipeline.name
-
-  frequency = "Day"
-  interval  = 1
-}
+#resource "azurerm_data_factory_pipeline" "pipeline" {
+#  name            = "data-pipeline"
+#  data_factory_id = azurerm_data_factory.data_factory.id
+#
+#  activities_json = <<JSON
+#  [
+#    {
+#      "name": "CopyFromBlobToADLS",
+#      "type": "Copy",
+#      "dependsOn": [],
+#      "typeProperties": {
+#        "source": {
+#          "type": "ParquetSource"
+#        },
+#        "sink": {
+#          "type": "AzureDataLakeStoreSink",
+#          "linkedServiceName": {
+#            "referenceName": "${azurerm_data_factory_linked_service_azure_data_lake_store.adls.name}",
+#            "type": "LinkedServiceReference"
+#          }
+#        }
+#      },
+#      "inputs": [
+#        {
+#          "referenceName": "${azurerm_data_factory_dataset_parquet.transactions_source.name}",
+#          "type": "DatasetReference"
+#        }
+#      ],
+#      "outputs": [
+#        {
+#          "referenceName": "${azurerm_data_factory_dataset_parquet.transactions_source.name}",
+#          "type": "DatasetReference"
+#        }
+#      ]
+#    }
+#  ]
+#  JSON
+#}
+## Data Factory Trigger for Daily Execution
+#resource "azurerm_data_factory_trigger_schedule" "daily_trigger" {
+#  name            = "daily-trigger"
+#  data_factory_id = azurerm_data_factory.data_factory.id
+#
+#  pipeline_name = azurerm_data_factory_pipeline.pipeline.name
+#
+#  frequency = "Day"
+#  interval  = 1
+#}
 
 ## Storage Account
 #resource "azurerm_storage_account" "example" {
