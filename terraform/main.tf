@@ -81,6 +81,7 @@ resource "azurerm_key_vault_access_policy" "kv_access" {
   ]
 }
 
+
 # Key Vault key
 resource "azurerm_key_vault_key" "kv_key" {
   name         = "kv-key-${local.current_year}ch"

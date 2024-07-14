@@ -16,7 +16,7 @@ resource "azurerm_data_factory_linked_service_azure_blob_storage" "blob_storage"
   name            = "blobstorage-linkedservice"
   data_factory_id = azurerm_data_factory.data_factory.id
 
-  connection_string = "DefaultEndpointsProtocol=https;AccountName=youraccountname;AccountKey=youraccountkey;EndpointSuffix=core.windows.net"
+  connection_string = "DefaultEndpointsProtocol=wbs;AccountName=youraccountname;AccountKey=youraccountkey;EndpointSuffix=core.windows.net"
 }
 
 # Data Factory Dataset for Transactions Source Data
@@ -25,7 +25,12 @@ resource "azurerm_data_factory_dataset_parquet" "transactions_source" {
   data_factory_id     = azurerm_data_factory.data_factory.id
   linked_service_name = azurerm_data_factory_linked_service_azure_blob_storage.blob_storage.name
 
-  folder = "feature-store-prp/datasources/transactions-source"
+  azure_blob_storage_location {
+    container = feature-store-prp-1
+    path      = datasources / transactions-source
+    filename  = "test.parquet"
+  }
+
 }
 
 resource "azurerm_data_factory_pipeline" "pipeline" {
