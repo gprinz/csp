@@ -27,22 +27,15 @@ resource "azurerm_data_factory" "df" {
   location            = azurerm_resource_group.rg_prod.location
 
   identity {
-    type         = "UserAssigned"
-    identity_ids = [azurerm_user_assigned_identity.uai_df.id]
+    type = "SystemAssigned"
   }
 }
 
-// Assign the "Storage Blob Data Contributor" role to the managed identity
-resource "azurerm_role_assignment" "raw_data_storage" {
-  principal_id         = azurerm_user_assigned_identity.uai_df.principal_id
-  role_definition_name = "Storage Blob Data Contributor"
-  scope                = azurerm_storage_account.raw_data.id
-}
 resource "azurerm_data_factory_linked_service_azure_blob_storage" "source" {
-  name              = "open_data"
-  data_factory_id   = azurerm_data_factory.df.id
-  connection_string = "DefaultEndpointsProtocol=https;AccountName=${azurerm_storage_account.raw_data.name};EndpointSuffix=blob.core.windows.net"
-
+  name                 = "open_data"
+  data_factory_id      = azurerm_data_factory.df.id
+  service_endpoint     = "https://${azurerm_storage_account}.raw_data.name.blob.core.windows.net"
+  use_managed_identity = true
 }
 
 resource "azurerm_data_factory_dataset_parquet" "source_parquet" {
