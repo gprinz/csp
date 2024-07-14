@@ -48,13 +48,9 @@ resource "azurerm_data_factory_dataset_azure_blob" "source_dataset" {
 }
 
 
-
-
-resource "azurerm_data_factory_linked_service_data_lake_storage_gen2" "example" {
-  name                 = "example"
-  data_factory_id      = azurerm_data_factory.example.id
-  url                  = azurerm_storage_data_lake_gen2_filesystem.example.url
-  use_managed_identity = true
+resource "azurerm_data_factory_linked_service_azure_blob_storage" "example" {
+  name            = "example"
+  data_factory_id = azurerm_data_factory.example.id
 }
 
 
@@ -62,13 +58,12 @@ resource "azurerm_data_factory_linked_service_data_lake_storage_gen2" "example" 
 resource "azurerm_data_factory_dataset_azure_blob" "destination_dataset" {
   name                = "example-destination-dataset"
   data_factory_id     = azurerm_data_factory.example.id
-  linked_service_name = azurerm_data_factory_linked_service_data_lake_storage_gen2.example.name
+  linked_service_name = azurerm_data_factory_linked_service_azure_blob_storage.example.name
 }
 
 resource "azurerm_data_factory_pipeline" "example_pipeline" {
   name            = "example-pipeline"
   data_factory_id = azurerm_data_factory.example.id
-
   dynamic "activity" {
     for_each = [
       {
