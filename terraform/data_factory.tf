@@ -32,3 +32,9 @@ resource "azurerm_data_factory" "example" {
   resource_group_name = azurerm_resource_group.example.name
   location            = azurerm_resource_group.example.location
 }
+
+resource "azurerm_data_factory_linked_service_azure_blob_storage" "source" {
+  name              = "example-linked-service-source"
+  data_factory_id   = azurerm_data_factory.example.id
+  connection_string = "DefaultEndpointsProtocol=https;AccountName=stmdwpublic;EndpointSuffix=blob.core.windows.net"
+}
