@@ -10,7 +10,7 @@ terraform {
 provider "azurerm" {
   features {
     key_vault {
-      purge_soft_delete_on_destroy = true
+      purge_soft_delete_on_destroy = false
     }
   }
 }
@@ -48,7 +48,7 @@ resource "azurerm_application_insights" "ai" {
 
 # Key Vault configuration
 resource "azurerm_key_vault" "kv" {
-  name                     = "kv-${local.current_year}-ch"
+  name                     = "kv-${local.current_year}-ch-2"
   location                 = azurerm_resource_group.ml_rg.location
   resource_group_name      = azurerm_resource_group.ml_rg.name
   tenant_id                = data.azurerm_client_config.current.tenant_id
