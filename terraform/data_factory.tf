@@ -20,7 +20,7 @@ resource "azurerm_data_factory" "df" {
 }
 
 resource "azurerm_data_factory_linked_service_azure_blob_storage" "source" {
-  name              = "example-linked-service-source"
-  data_factory_id   = azurerm_data_factory.cv.id
-  connection_string = "DefaultEndpointsProtocol=https;AccountName=stmdwpublic;EndpointSuffix=blob.core.windows.net"
+  name              = "Open Data"
+  data_factory_id   = azurerm_data_factory.df.id
+  connection_string = "DefaultEndpointsProtocol=https;AccountName=azureopendatastorage;EndpointSuffix=blob.core.windows.net"
 }
