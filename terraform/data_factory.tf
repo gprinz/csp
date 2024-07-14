@@ -34,7 +34,7 @@ resource "azurerm_data_factory" "df" {
 resource "azurerm_data_factory_linked_service_azure_blob_storage" "source" {
   name                 = "open_data"
   data_factory_id      = azurerm_data_factory.df.id
-  service_endpoint     = "https://${azurerm_storage_account.name}.raw_data.name.blob.core.windows.net"
+  service_endpoint     = "https://${azurerm_storage_account.raw_data.name}.blob.core.windows.net"
   use_managed_identity = true
 }
 
