@@ -39,6 +39,6 @@ resource "azurerm_data_factory_dataset_parquet" "source_parquet" {
 resource "azurerm_data_factory_linked_service_data_lake_storage_gen2" "destination" {
   name                 = "destination-parquet"
   data_factory_id      = azurerm_data_factory.df.id
-  url                  = azurerm_storage_data_lake_gen2_filesystem.dl_fs.primary_blob_endpoint
+  url                  = "https://${azurerm_storage_account.datalake.name}.blob.core.windows.net/"
   use_managed_identity = true
 }
