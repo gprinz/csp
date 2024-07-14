@@ -28,19 +28,19 @@ locals {
 
 # Resource Group for production
 resource "azurerm_resource_group" "rg_prod" {
-  name     = "rg-${local.current_year}-CH"
+  name     = "rg-${local.current_year}-ch"
   location = "West Europe"
 }
 
 # Resource Group for machine learning
 resource "azurerm_resource_group" "ml_rg" {
-  name     = "rg-ml-${local.current_year}-CH"
+  name     = "rg-ml-${local.current_year}-ch"
   location = "West Europe"
 }
 
 # Application Insights configuration
 resource "azurerm_application_insights" "ai" {
-  name                = "ai-${local.current_year}-CH"
+  name                = "ai-${local.current_year}-ch"
   location            = azurerm_resource_group.ml_rg.location
   resource_group_name = azurerm_resource_group.ml_rg.name
   application_type    = "web"
@@ -48,7 +48,7 @@ resource "azurerm_application_insights" "ai" {
 
 # Key Vault configuration
 resource "azurerm_key_vault" "kv" {
-  name                     = "kv-${local.current_year}-CH"
+  name                     = "kv-${local.current_year}-ch"
   location                 = azurerm_resource_group.ml_rg.location
   resource_group_name      = azurerm_resource_group.ml_rg.name
   tenant_id                = data.azurerm_client_config.current.tenant_id
@@ -58,7 +58,7 @@ resource "azurerm_key_vault" "kv" {
 
 # Storage account configuration
 resource "azurerm_storage_account" "storage" {
-  name                     = "sa${local.current_year}CH"
+  name                     = "sa${local.current_year}ch"
   location                 = azurerm_resource_group.ml_rg.location
   resource_group_name      = azurerm_resource_group.ml_rg.name
   account_tier             = "Standard"
@@ -67,7 +67,7 @@ resource "azurerm_storage_account" "storage" {
 
 # Key Vault key
 resource "azurerm_key_vault_key" "kv_key" {
-  name         = "kv-key-${local.current_year}-CH"
+  name         = "kv-key-${local.current_year}-ch"
   key_vault_id = azurerm_key_vault.kv.id
   key_type     = "RSA"
   key_size     = 2048
@@ -89,7 +89,7 @@ resource "azurerm_key_vault_key" "kv_key" {
 
 # Machine learning workspace configuration
 resource "azurerm_machine_learning_workspace" "ml_workspace" {
-  name                    = "workspace-${local.current_year}-CH"
+  name                    = "workspace-${local.current_year}-ch"
   location                = azurerm_resource_group.ml_rg.location
   resource_group_name     = azurerm_resource_group.ml_rg.name
   application_insights_id = azurerm_application_insights.ai.id
