@@ -43,56 +43,56 @@ resource "azurerm_data_factory_linked_service_data_lake_storage_gen2" "destinati
   use_managed_identity = true
 }
 
-resource "azurerm_data_factory_dataset_parquet" "destination_parquet" {
-  name                = "Taxi_Data_Lake"
-  data_factory_id     = azurerm_data_factory.df.id
-  linked_service_name = azurerm_data_factory_linked_service_data_lake_storage_gen2.destination.name
-
-  azure_blob_storage_location {
-    container = "nyctlc"
-    path      = "yellow/"
-  }
-}
-
-# Pipeline
-resource "azurerm_data_factory_pipeline" "example_pipeline" {
-  name            = "laod-taxi-data"
-  data_factory_id = azurerm_data_factory.example.name
-
-  dynamic "activity" {
-    for_each = [
-      {
-        name    = "GetMetadata"
-        type    = "GetMetadata"
-        inputs  = [azurerm_data_factory_dataset_azure_data_lake_storage_gen2.source_dataset.id]
-        outputs = []
-        settings = jsonencode({
-          fieldList = ["Child Items"]
-        })
-      },
-      {
-        name = "ForEach"
-        type = "ForEach"
-        settings = jsonencode({
-          items = "@activity('GetMetadata').output.childItems"
-        })
-        activities = [
-          {
-            name    = "CopyData"
-            type    = "Copy"
-            inputs  = [azurerm_data_factory_dataset_parquet.source_parquet.id]
-            outputs = [azurerm_data_factory_dataset_azure_blob.destination_parquet.id]
-            settings = jsonencode({
-              source = {
-                type = "ParquetSource"
-              },
-              sink = {
-                type = "BlobSink"
-              }
-            })
-          }
-        ]
-      }
-    ]
-  }
-}
+#resource "azurerm_data_factory_dataset_parquet" "destination_parquet" {
+#  name                = "Taxi_Data_Lake"
+#  data_factory_id     = azurerm_data_factory.df.id
+#  linked_service_name = azurerm_data_factory_linked_service_data_lake_storage_gen2.destination.name
+#
+#  azure_blob_storage_location {
+#    container = "nyctlc"
+#    path      = "yellow/"
+#  }
+#}
+#
+## Pipeline
+#resource "azurerm_data_factory_pipeline" "example_pipeline" {
+#  name            = "laod-taxi-data"
+#  data_factory_id = azurerm_data_factory.example.name
+#
+#  dynamic "activity" {
+#    for_each = [
+#      {
+#        name    = "GetMetadata"
+#        type    = "GetMetadata"
+#        inputs  = [azurerm_data_factory_dataset_azure_data_lake_storage_gen2.source_dataset.id]
+#        outputs = []
+#        settings = jsonencode({
+#          fieldList = ["Child Items"]
+#        })
+#      },
+#      {
+#        name = "ForEach"
+#        type = "ForEach"
+#        settings = jsonencode({
+#          items = "@activity('GetMetadata').output.childItems"
+#        })
+#        activities = [
+#          {
+#            name    = "CopyData"
+#            type    = "Copy"
+#            inputs  = [azurerm_data_factory_dataset_parquet.source_parquet.id]
+#            outputs = [azurerm_data_factory_dataset_azure_blob.destination_parquet.id]
+#            settings = jsonencode({
+#              source = {
+#                type = "ParquetSource"
+#              },
+#              sink = {
+#                type = "BlobSink"
+#              }
+#            })
+#          }
+#        ]
+#      }
+#    ]
+#  }
+#}
