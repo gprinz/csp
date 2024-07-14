@@ -24,7 +24,7 @@ resource "azurerm_data_factory" "df" {
 }
 
 resource "azurerm_role_assignment" "raw_data_storage" {
-  principal_id         = azurerm_data_factory.df.identity.principal_id
+  principal_id         = azurerm_data_factory.df.identity.principal_id[0]
   role_definition_name = "Storage Blob Data Contributor"
   scope                = azurerm_storage_account.raw_data.id
 }
