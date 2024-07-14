@@ -1,34 +1,20 @@
-# Create Resource Group
-resource "azurerm_resource_group" "example" {
-  name     = "example-resources"
-  location = "West Europe"
-}
-
-# Create Data Lake Storage Account
+# Storage account configuration
 resource "azurerm_storage_account" "datalake" {
-  name                     = "examplestorageacc"
-  resource_group_name      = azurerm_resource_group.example.name
-  location                 = azurerm_resource_group.example.location
+  name                     = "sadl${local.current_year}ch"
+  location                 = azurerm_resource_group.ml_rg.location
+  resource_group_name      = azurerm_resource_group.ml_rg.name
   account_tier             = "Standard"
   account_replication_type = "LRS"
-
-  blob_properties {
-    container_delete_retention_policy {
-      days = 7
-    }
-  }
 }
 
 # Create Data Lake Gen2 Filesystem
 resource "azurerm_storage_data_lake_gen2_filesystem" "example" {
-  name               = "example-filesystem"
+  name               = "dlfs-${local.current_year}-ch"
   storage_account_id = azurerm_storage_account.datalake.id
 }
 
-
-
 resource "azurerm_data_factory" "example" {
-  name                = "exampledf"
+  name                = "df-${local.current_year}-ch"
   resource_group_name = azurerm_resource_group.example.name
   location            = azurerm_resource_group.example.location
 }

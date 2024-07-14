@@ -57,12 +57,12 @@ resource "azurerm_key_vault" "kv" {
 }
 
 # Storage account configuration
-resource "azurerm_storage_account" "storage" {
-  name                     = "sa${local.current_year}ch"
+resource "azurerm_storage_account" "ml" {
+  name                     = "saml${local.current_year}ch"
   location                 = azurerm_resource_group.ml_rg.location
   resource_group_name      = azurerm_resource_group.ml_rg.name
   account_tier             = "Standard"
-  account_replication_type = "GRS"
+  account_replication_type = "LRS"
 }
 
 # Key Vault access policy
@@ -77,10 +77,9 @@ resource "azurerm_key_vault_access_policy" "kv_access" {
     "Delete",
     "Purge",
     "GetRotationPolicy",
-    "Recover", # Add this line
+    "Recover"
   ]
 }
-
 
 # Key Vault key
 resource "azurerm_key_vault_key" "kv_key" {
