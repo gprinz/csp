@@ -81,7 +81,7 @@ resource "azurerm_data_factory_pipeline" "example_pipeline" {
             name    = "CopyData"
             type    = "Copy"
             inputs  = [azurerm_data_factory_dataset_parquet.source_parquet.id]
-            outputs = [azurerm_data_factory_dataset_azure_blob.destination_dataset.id]
+            outputs = [azurerm_data_factory_dataset_azure_blob.destination_parquet.id]
             settings = jsonencode({
               source = {
                 type = "ParquetSource"
