@@ -26,8 +26,8 @@ resource "azurerm_data_factory_dataset_parquet" "transactions_source" {
   linked_service_name = azurerm_data_factory_linked_service_azure_blob_storage.blob_storage.name
 
   azure_blob_storage_location {
-    container = feature-store-prp-1
-    path      = datasources / transactions-source
+    container = "feature-store-prp-1"
+    path      = "datasources / transactions-source"
     filename  = "test.parquet"
   }
 
