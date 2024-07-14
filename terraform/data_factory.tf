@@ -89,7 +89,7 @@ resource "azurerm_storage_account" "example" {
   location                 = azurerm_resource_group.rg.location
   account_tier             = "Standard"
   account_replication_type = "LRS"
-  is_hns_enabled           = true # This enables the Data Lake Storage Gen2 capabilities
+  is_hns_enabled           = false # This enables the Data Lake Storage Gen2 capabilities
 }
 
 # Storage Container
@@ -100,12 +100,9 @@ resource "azurerm_storage_container" "example" {
 }
 
 # Data Factory Linked Service for ADLS Gen2
-resource "azurerm_data_factory_linked_service_azure_data_lake_store" "adls" {
-  name                = "adls-linkedservice"
-  resource_group_name = azurerm_resource_group.rg.name
-  data_factory_name   = azurerm_data_factory.data_factory.name
-
-  data_lake_store_id = azurerm_storage_account.example.id
+resource "azurerm_data_factory_linked_service_azure_blob_storage" "adls" {
+  name            = "adls-linkedservice"
+  data_factory_id = azurerm_data_factory.data_factory.id
 }
 
 # Permissions for Data Factory to access Data Lake Store
