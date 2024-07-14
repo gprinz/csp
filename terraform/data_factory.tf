@@ -20,9 +20,13 @@ resource "azurerm_data_factory" "df" {
 }
 
 resource "azurerm_data_factory_linked_service_azure_blob_storage" "source" {
-  name            = "Open_Data"
-  data_factory_id = azurerm_data_factory.df.id
-  sas_uri         = "https://azureopendatastorage.blob.core.windows.net/"
+  name              = "Open_Data"
+  data_factory_id   = azurerm_data_factory.df.id
+  connection_string = "DefaultEndpointsProtocol=https;AccountName=azureopendatastorage;EndpointSuffix=blob.core.windows.net"
+
+  parameters = {
+    authenticationType = "Anonymous"
+  }
 }
 
 resource "azurerm_data_factory_dataset_parquet" "source_parquet" {
