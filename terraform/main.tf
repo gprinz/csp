@@ -104,7 +104,7 @@ resource "azurerm_key_vault_key" "kv_key" {
 }
 
 # Machine learning workspace configuration
-resource "azurerm_machine_learning_workspace" "ml_workspace" {
+resource "azurerm_machine_learning_workspace" "fstore" {
   name                    = "fstore-${local.current_year}-ch"
   location                = azurerm_resource_group.ml_rg.location
   resource_group_name     = azurerm_resource_group.ml_rg.name
