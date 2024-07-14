@@ -17,16 +17,23 @@ resource "azurerm_data_factory" "df" {
   name                = "df-${local.current_year}-ch"
   resource_group_name = azurerm_resource_group.rg_prod.name
   location            = azurerm_resource_group.rg_prod.location
+
+  identity {
+    type = "SystemAssigned"
+  }
+}
+
+resource "azurerm_role_assignment" "raw_data_storage" {
+  principal_id         = azurerm_data_factory.df.identity.principal_id
+  role_definition_name = "Storage Blob Data Contributor"
+  scope                = azurerm_storage_account.raw_data.id
 }
 
 resource "azurerm_data_factory_linked_service_azure_blob_storage" "source" {
   name              = "Open_Data"
   data_factory_id   = azurerm_data_factory.df.id
-  connection_string = "DefaultEndpointsProtocol=https;AccountName=azureopendatastorage;EndpointSuffix=blob.core.windows.net"
+  connection_string = "DefaultEndpointsProtocol=https;AccountName=${azurerm_storage_account.raw_data.name};EndpointSuffix=blob.core.windows.net"
 
-  parameters = {
-    authenticationType = "Anonymous"
-  }
 }
 
 resource "azurerm_data_factory_dataset_parquet" "source_parquet" {

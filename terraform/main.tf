@@ -65,6 +65,15 @@ resource "azurerm_storage_account" "ml" {
   account_replication_type = "LRS"
 }
 
+# Storage account configuration
+resource "azurerm_storage_account" "raw_data" {
+  name                     = "sarawdata${local.current_year}ch"
+  location                 = azurerm_resource_group.ml_rg.location
+  resource_group_name      = azurerm_resource_group.ml_rg.name
+  account_tier             = "Standard"
+  account_replication_type = "LRS"
+}
+
 # Key Vault access policy
 resource "azurerm_key_vault_access_policy" "kv_access" {
   key_vault_id = azurerm_key_vault.kv.id
