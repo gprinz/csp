@@ -65,9 +65,34 @@ resource "azurerm_storage_account" "storage" {
   account_replication_type = "GRS"
 }
 
+# Key Vault access policy
+resource "azurerm_key_vault_access_policy" "kv_access" {
+  key_vault_id = azurerm_key_vault.kv.id
+  tenant_id    = data.azurerm_client_config.current.tenant_id
+  object_id    = data.azurerm_client_config.current.object_id
+
+  key_permissions = [
+    "Create",
+    "Get",
+    "Delete",
+    "Purge",
+    "GetRotationPolicy",
+    "Recover", # Add this line
+  ]
+}
+
+# Storage account configuration
+resource "azurerm_storage_account" "storage" {
+  name                     = "sa${local.current_year}ch"
+  location                 = azurerm_resource_group.ml_rg.location
+  resource_group_name      = azurerm_resource_group.ml_rg.name
+  account_tier             = "Standard"
+  account_replication_type = "GRS"
+}
+
 # Key Vault key
 resource "azurerm_key_vault_key" "kv_key" {
-  name         = "kv-key-${local.current_year}-ch"
+  name         = "kv-key-${local.current_year}ch"
   key_vault_id = azurerm_key_vault.kv.id
   key_type     = "RSA"
   key_size     = 2048
@@ -83,7 +108,7 @@ resource "azurerm_key_vault_key" "kv_key" {
 
   depends_on = [
     azurerm_key_vault.kv,
-    #azurerm_key_vault_access_policy.kv_access
+    azurerm_key_vault_access_policy.kv_access
   ]
 }
 
