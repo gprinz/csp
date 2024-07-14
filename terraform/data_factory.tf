@@ -48,19 +48,14 @@ resource "azurerm_data_factory_dataset_azure_blob" "source_dataset" {
 }
 
 
-resource "azuread_application" "example" {
-  display_name = "example-app"
-}
-
-
-resource "azurerm_data_factory_linked_service_azure_blob_storage" "destination" {
-  name              = "example-linked-service-destination"
+resource "azurerm_data_factory_linked_service_azure_blob_storage" "source" {
+  name              = "example-linked-service-source"
   data_factory_id   = azurerm_data_factory.example.name
   connection_string = azurerm_storage_account.datalake.primary_connection_string
 }
 
-resource "azurerm_data_factory_linked_service_azure_data_lake_storage_gen2" "source" {
-  name                 = "example-linked-service-source"
+resource "azurerm_data_factory_linked_service_azure_data_lake_storage_gen2" "destination" {
+  name                 = "example-linked-service-destination"
   resource_group_name  = azurerm_resource_group.example.name
   data_factory_name    = azurerm_data_factory.example.name
   storage_account_name = azurerm_storage_account.datalake.name
@@ -70,7 +65,7 @@ resource "azurerm_data_factory_linked_service_azure_data_lake_storage_gen2" "sou
 resource "azurerm_data_factory_dataset_azure_blob" "destination_dataset" {
   name                = "example-destination-dataset"
   data_factory_id     = azurerm_data_factory.example.id
-  linked_service_name = azurerm_data_factory_linked_service_azure_blob_storage.destination.name
+  linked_service_name = azurerm_data_factory_linked_service_azure_data_lake_storage_gen2.destination.name
 }
 
 resource "azurerm_data_factory_pipeline" "example_pipeline" {
