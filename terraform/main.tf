@@ -1,3 +1,12 @@
+terraform {
+  backend "remote" {
+    organization = "CSP-ETH"
+    workspaces {
+      name = "PROD"
+    }
+  }
+}
+
 provider "azurerm" {
   features {
     key_vault {
