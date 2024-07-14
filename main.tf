@@ -1,6 +1,6 @@
 terraform {
   backend "remote" {
-    organization = "csp"
+    organization = "CSP-ETH"
     workspaces {
       name = "PROD"
     }
