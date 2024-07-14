@@ -1,4 +1,4 @@
-name: Terraform and Azure Function Deploy
+name: Terraform Deployment
 
 on: [push, pull_request]
 
