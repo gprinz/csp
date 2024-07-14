@@ -1,5 +1,5 @@
 # Resource Group
-resource "azurerm_resource_group" "rg" {
+resource "azurerm_resource_group" "rg2" {
   name     = "myResourceGroup"
   location = "East US"
 }
@@ -7,8 +7,8 @@ resource "azurerm_resource_group" "rg" {
 # Storage Account
 resource "azurerm_storage_account" "storageacct" {
   name                     = "mystorageaccount"
-  resource_group_name      = azurerm_resource_group.rg.name
-  location                 = azurerm_resource_group.rg.location
+  resource_group_name      = azurerm_resource_group.rg2.name
+  location                 = azurerm_resource_group.rg2.location
   account_tier             = "Standard"
   account_replication_type = "LRS"
   is_hns_enabled           = true
@@ -17,15 +17,15 @@ resource "azurerm_storage_account" "storageacct" {
 # User-assigned Managed Identity
 resource "azurerm_user_assigned_identity" "synapse_identity" {
   name                = "mySynapseIdentity"
-  resource_group_name = azurerm_resource_group.rg.name
-  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg2.name
+  location            = azurerm_resource_group.rg2.location
 }
 
 # Synapse Analytics Workspace
 resource "azurerm_synapse_workspace" "synapse" {
   name                                 = "mySynapseWorkspace"
-  resource_group_name                  = azurerm_resource_group.rg.name
-  location                             = azurerm_resource_group.rg.location
+  resource_group_name                  = azurerm_resource_group.rg2.name
+  location                             = azurerm_resource_group.rg2.location
   storage_data_lake_gen2_filesystem_id = azurerm_storage_account.storageacct.primary_blob_endpoint
   sql_administrator_login              = "sqladminuser"
   sql_administrator_login_password     = "P@ssw0rd1234!" # Ensure this is stored securely
