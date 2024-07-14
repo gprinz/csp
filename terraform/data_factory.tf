@@ -7,6 +7,13 @@ resource "azurerm_storage_account" "datalake" {
   account_replication_type = "LRS"
 }
 
+// Define a container called "taxi" in the Azure Storage Account
+resource "azurerm_storage_container" "taxi" {
+  name                  = "taxi"
+  storage_account_name  = azurerm_storage_account.datalake.name
+  container_access_type = "private"
+}
+
 # Create Data Lake Gen2 Filesystem
 resource "azurerm_storage_data_lake_gen2_filesystem" "dl_fs" {
   name               = "dlfs-${local.current_year}-ch"
@@ -39,20 +46,19 @@ resource "azurerm_role_assignment" "raw_data_storage" {
   scope                = azurerm_storage_account.raw_data.id
 }
 resource "azurerm_data_factory_linked_service_azure_blob_storage" "source" {
-  name              = "Open_Data"
+  name              = "open_data"
   data_factory_id   = azurerm_data_factory.df.id
   connection_string = "DefaultEndpointsProtocol=https;AccountName=${azurerm_storage_account.raw_data.name};EndpointSuffix=blob.core.windows.net"
 
 }
 
 resource "azurerm_data_factory_dataset_parquet" "source_parquet" {
-  name                = "Taxi_Data_Open_Data"
+  name                = "open_data_link"
   data_factory_id     = azurerm_data_factory.df.id
   linked_service_name = azurerm_data_factory_linked_service_azure_blob_storage.source.name
 
   azure_blob_storage_location {
-    container = "nyctlc"
-    path      = "yellow/"
+    container = azurerm_storage_container.taxi.name
   }
 }
 
