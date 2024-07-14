@@ -112,6 +112,7 @@ resource "azurerm_machine_learning_workspace" "fstore" {
   key_vault_id            = azurerm_key_vault.kv.id
   storage_account_id      = azurerm_storage_account.ml.id
   kind                    = "FeatureStore"
+  high_business_impact    = true
 
   feature_store {
     computer_spark_runtime_version = "3.1"
@@ -134,6 +135,7 @@ resource "azurerm_machine_learning_workspace" "ml_workspace" {
   application_insights_id = azurerm_application_insights.ai.id
   key_vault_id            = azurerm_key_vault.kv.id
   storage_account_id      = azurerm_storage_account.ml.id
+  high_business_impact    = true
 
   identity {
     type = "SystemAssigned"
