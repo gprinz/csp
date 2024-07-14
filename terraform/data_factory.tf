@@ -82,11 +82,21 @@ resource "azurerm_data_factory_trigger_schedule" "daily_trigger" {
   interval  = 1
 }
 
-# Data Lake Store (if not existing)
-resource "azurerm_data_lake_store" "adls" {
-  name                = "datalake"
-  resource_group_name = azurerm_resource_group.rg.name
-  location            = azurerm_resource_group.rg.location
+# Storage Account
+resource "azurerm_storage_account" "example" {
+  name                     = "examplestorageacct"
+  resource_group_name      = azurerm_resource_group.rg.name
+  location                 = azurerm_resource_group.rg.location
+  account_tier             = "Standard"
+  account_replication_type = "LRS"
+  is_hns_enabled           = true # This enables the Data Lake Storage Gen2 capabilities
+}
+
+# Storage Container
+resource "azurerm_storage_container" "example" {
+  name                  = "example-container"
+  storage_account_name  = azurerm_storage_account.example.name
+  container_access_type = "private"
 }
 
 # Data Factory Linked Service for ADLS Gen2
@@ -95,12 +105,12 @@ resource "azurerm_data_factory_linked_service_azure_data_lake_store" "adls" {
   resource_group_name = azurerm_resource_group.rg.name
   data_factory_name   = azurerm_data_factory.data_factory.name
 
-  data_lake_store_id = azurerm_data_lake_store.adls.id
+  data_lake_store_id = azurerm_storage_account.example.id
 }
 
 # Permissions for Data Factory to access Data Lake Store
 resource "azurerm_role_assignment" "role_assignment" {
   principal_id         = azurerm_data_factory.data_factory.identity.0.principal_id
   role_definition_name = "Contributor"
-  scope                = azurerm_data_lake_store.adls.id
+  scope                = azurerm_storage_account.example.id
 }
