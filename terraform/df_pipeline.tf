@@ -1,5 +1,5 @@
 
-resource "azurerm_data_factory_pipeline" "txi_green_copy" {
+resource "azurerm_data_factory_pipeline" "taxi_green_copy" {
   name            = "pipeline1"
   data_factory_id = azurerm_data_factory.df.id
   variables = {
@@ -70,63 +70,53 @@ resource "azurerm_data_factory_pipeline" "txi_green_copy" {
   JSON
 }
 
-resource "azurerm_data_factory_dataset" "yellow_taxi" {
+resource "azurerm_data_factory_dataset_parquet" "yellow_taxi" {
   name                = "yellow_taxi"
-  data_factory_id     = azurerm_data_factory.example.id
+  data_factory_id     = azurerm_data_factory.df.id
   linked_service_name = azurerm_data_factory_linked_service.NYCTaxi.name
-  type                = "Parquet"
-  annotations         = []
-  type_properties {
-    location {
-      type        = "AzureBlobStorageLocation"
-      folder_path = "yellow"
-      container   = "nyctlc"
-    }
-    compression_codec = "snappy"
+
+  azure_blob_storage_location {
+    path      = "yellow"
+    container = "nyctlc"
   }
-  schema {
+  compression_codec = "snappy"
+
+  schema_column {
     name = "vendorID"
     type = "UTF8"
   }
-  // Add the remaining schema fields
 }
 
-resource "azurerm_data_factory_dataset" "green_taxi" {
+resource "azurerm_data_factory_dataset_parquet" "green_taxi" {
   name                = "green_taxi"
   data_factory_id     = azurerm_data_factory.example.id
   linked_service_name = azurerm_data_factory_linked_service.NYCTaxi.name
-  type                = "Parquet"
-  annotations         = []
-  type_properties {
-    location {
-      type        = "AzureBlobStorageLocation"
-      folder_path = "green"
-      container   = "nyctlc"
-    }
-    compression_codec = "snappy"
+
+  azure_blob_storage_location {
+    path      = "green"
+    container = "nyctlc"
   }
-  schema {
+  compression_codec = "snappy"
+
+  schema_column {
     name = "vendorID"
     type = "UTF8"
   }
   // Add the remaining schema fields
 }
 
-resource "azurerm_data_factory_dataset" "taxi_fhv" {
+resource "azurerm_data_factory_dataset_parquet" "taxi_fhv" {
   name                = "taxi_fhv"
   data_factory_id     = azurerm_data_factory.example.id
   linked_service_name = azurerm_data_factory_linked_service.NYCTaxi.name
-  type                = "Parquet"
-  annotations         = []
-  type_properties {
-    location {
-      type        = "AzureBlobStorageLocation"
-      folder_path = "fhv"
-      container   = "nyctlc"
-    }
-    compression_codec = "snappy"
+
+  azure_blob_storage_location {
+    path      = "fhv"
+    container = "nyctlc"
   }
-  schema {
+  compression_codec = "snappy"
+
+  schema_column {
     name = "vendorID"
     type = "UTF8"
   }
