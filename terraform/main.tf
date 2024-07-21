@@ -15,6 +15,7 @@ provider "azurerm" {
   }
 }
 
+
 # Get Subscription ID
 data "azurerm_client_config" "current" {}
 
