@@ -1,7 +1,3 @@
-locals {
-  current_year = "2024" # Ensure this is set correctly
-}
-
 # Storage account configuration
 resource "azurerm_storage_account" "datalake" {
   name                     = "sadl${local.current_year}ch"
