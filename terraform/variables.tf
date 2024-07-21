@@ -19,3 +19,13 @@ variable "ARM_TENANT_ID" {
   description = "The tenant ID for Azure"
   type        = string
 }
+
+variable "SYNAPSE_ADMIN_USER" {
+  description = "The tenant ID for Azure"
+  type        = string
+}
+
+variable "SYNAPSE_ADMIN_PWD" {
+  description = "The tenant ID for Azure"
+  type        = string
+}
