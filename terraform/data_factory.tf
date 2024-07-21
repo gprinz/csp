@@ -11,8 +11,6 @@ resource "azurerm_storage_account" "datalake" {
 resource "azurerm_storage_data_lake_gen2_filesystem" "dl_fs" {
   name               = "dlfs-${local.current_year}-ch"
   storage_account_id = azurerm_storage_account.datalake.id
-
-  depends_on = [azurerm_storage_account.datalake] # Explicit dependency
 }
 
 // Define a user-assigned managed identity
@@ -33,35 +31,29 @@ resource "azurerm_data_factory" "df" {
   }
 }
 
-resource "azurerm_data_factory_linked_service_azure_blob_storage" "source" {
-  name                 = "open_data"
-  data_factory_id      = azurerm_data_factory.df.id
-  service_endpoint     = "https://${azurerm_storage_account.datalake.name}.blob.core.windows.net"
-  use_managed_identity = true
-
-  depends_on = [azurerm_data_factory.df, azurerm_storage_account.datalake] # Explicit dependencies
-}
-
-resource "azurerm_data_factory_dataset_parquet" "source_parquet" {
-  name                = "open_data_link"
-  data_factory_id     = azurerm_data_factory.df.id
-  linked_service_name = azurerm_data_factory_linked_service_azure_blob_storage.source.name
-
-  azure_blob_storage_location {
-    container = "your-container-name" # Ensure this is set correctly
-  }
-
-  depends_on = [azurerm_data_factory_linked_service_azure_blob_storage.source] # Explicit dependency
-}
-
-resource "azurerm_data_factory_linked_service_data_lake_storage_gen2" "destination" {
-  name                 = "Data_Lake"
-  data_factory_id      = azurerm_data_factory.df.id
-  url                  = "https://${azurerm_storage_account.datalake.name}.blob.core.windows.net/"
-  use_managed_identity = true
-
-  depends_on = [azurerm_data_factory.df, azurerm_storage_account.datalake] # Explicit dependencies
-}
+#resource "azurerm_data_factory_linked_service_azure_blob_storage" "source" {
+#  name                 = "open_data"
+#  data_factory_id      = azurerm_data_factory.df.id
+#  service_endpoint     = "https://${azurerm_storage_account.raw_data.name}.blob.core.windows.net"
+#  use_managed_identity = true
+#}
+#
+#resource "azurerm_data_factory_dataset_parquet" "source_parquet" {
+#  name                = "open_data_link"
+#  data_factory_id     = azurerm_data_factory.df.id
+#  linked_service_name = azurerm_data_factory_linked_service_azure_blob_storage.source.name
+#
+#  azure_blob_storage_location {
+#    container = azurerm_storage_container.taxi.name
+#  }
+#}
+#
+#resource "azurerm_data_factory_linked_service_data_lake_storage_gen2" "destination" {
+#  name                 = "Data_Lake"
+#  data_factory_id      = azurerm_data_factory.df.id
+#  url                  = "https://${azurerm_storage_account.datalake.name}.blob.core.windows.net/"
+#  use_managed_identity = true
+#}
 
 
 
