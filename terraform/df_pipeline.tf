@@ -141,8 +141,8 @@ resource "azurerm_data_factory_linked_service_azure_blob_storage" "Data" {
 
 resource "azurerm_data_factory_dataset_parquet" "Parquet1" {
   name                = "Parquet1"
-  data_factory_id     = azurerm_data_factory.example.id
-  linked_service_name = azurerm_data_factory_linked_service.Data.name
+  data_factory_id     = azurerm_data_factory.df.id
+  linked_service_name = azurerm_data_factory_linked_service_azure_blob_storage.Data.name
 
   azure_blob_storage_location {
     container = "raw-data"
