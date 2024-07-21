@@ -96,7 +96,7 @@ resource "azurerm_data_factory_dataset_parquet" "yellow_taxi" {
 
 resource "azurerm_data_factory_dataset_parquet" "green_taxi" {
   name                = "green_taxi"
-  data_factory_id     = azurerm_data_factory.example.id
+  data_factory_id     = azurerm_data_factory.df.id
   linked_service_name = azurerm_data_factory_linked_service_azure_blob_storage.NYCTaxi.name
 
   azure_blob_storage_location {
@@ -114,7 +114,7 @@ resource "azurerm_data_factory_dataset_parquet" "green_taxi" {
 
 resource "azurerm_data_factory_dataset_parquet" "taxi_fhv" {
   name                = "taxi_fhv"
-  data_factory_id     = azurerm_data_factory.example.id
+  data_factory_id     = azurerm_data_factory.df.id
   linked_service_name = azurerm_data_factory_linked_service_azure_blob_storage.NYCTaxi.name
 
   azure_blob_storage_location {
@@ -139,18 +139,18 @@ resource "azurerm_data_factory_linked_service_azure_blob_storage" "Data" {
   connection_string = azurerm_storage_container.raw_data.primary_connection_string
 }
 
-resource "azurerm_data_factory_dataset" "Parquet1" {
+resource "azurerm_data_factory_dataset_parquet" "Parquet1" {
   name                = "Parquet1"
   data_factory_id     = azurerm_data_factory.example.id
   linked_service_name = azurerm_data_factory_linked_service.Data.name
-  type                = "Parquet"
-  annotations         = []
-  type_properties {
-    location {
-      type      = "AzureBlobStorageLocation"
-      container = "raw-data"
-    }
-    compression_codec = "snappy"
+
+  azure_blob_storage_location {
+    container = "raw-data"
   }
-  schema = []
+  compression_codec = "snappy"
+
+  schema_column {
+    name = "vendorID"
+    type = "String"
+  }
 }
