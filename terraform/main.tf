@@ -60,7 +60,7 @@ resource "azurerm_application_insights" "ai" {
 
 # Key Vault configuration
 resource "azurerm_key_vault" "kv" {
-  name                     = "kv-${local.current_year}-ch100"
+  name                     = "kv-${local.current_year}-ch200"
   location                 = azurerm_resource_group.ml_rg.location
   resource_group_name      = azurerm_resource_group.ml_rg.name
   tenant_id                = data.azurerm_client_config.current.tenant_id
