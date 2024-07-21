@@ -2,7 +2,7 @@ terraform {
   backend "remote" {
     organization = "CSP-ETH"
     workspaces {
-      name = "AZ-PROD"
+      name = "PROD"
     }
   }
 }
