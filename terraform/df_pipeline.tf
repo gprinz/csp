@@ -13,32 +13,29 @@ resource "azurerm_resource_group_template_deployment" "NYCTaxi" {
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
         "parameters": {
-        "dataFactoryName": {
+        "factoryName": {
             "type": "string",
-            "metadata": {
-                "description": "Name of the Factory"
-            }
-        }
+            "metadata": "Data Factory name",
+            "defaultValue": "df-2024-ch"
+        },
+    },
+        "variables": {
+        "factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
     },
     "resources": [
       {
-        "type": "Microsoft.DataFactory/factories/linkedservices",
-        "apiVersion": "2018-06-01",
-        "name": "[concat(parameters('dataFactoryName'), '/NYCTaxi')]",
-        "properties": {
-          "type": "AzureBlobStorage",
-          "typeProperties": {
-            "serviceEndpoint": "https://azureopendatastorage.blob.core.windows.net/nyctlc",
-            "authenticationType": "Anonymous"
-          }
-        }
-      }
-    ],
-    "parameters": {
-      "dataFactoryName": {
-        "type": "string"
-      }
-    }
+            "name": "[concat(parameters('factoryName'), '/NYCTaxi')]",
+            "type": "Microsoft.DataFactory/factories/linkedServices",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "annotations": [],
+                "type": "AzureBlobStorage",
+                "typeProperties": {
+                    "containerUri": "https://azureopendatastorage.blob.core.windows.net/nyctlc",
+                    "authenticationType": "Anonymous"
+                }
+            },
+            "dependsOn": []
   }
   TEMPLATE
 }
