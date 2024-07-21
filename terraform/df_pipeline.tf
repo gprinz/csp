@@ -136,7 +136,7 @@ resource "azurerm_data_factory_dataset_parquet" "taxi_fhv" {
 resource "azurerm_data_factory_linked_service_azure_blob_storage" "Data" {
   name              = "Data"
   data_factory_id   = azurerm_data_factory.df.id
-  connection_string = azurerm_resource_group.rg_prod.primary_connection_string
+  connection_string = azurerm_storage_container.raw_data.primary_connection_string
 }
 
 resource "azurerm_data_factory_dataset" "Parquet1" {
