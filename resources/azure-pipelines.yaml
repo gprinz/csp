@@ -1,0 +1,51 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  AML_WORKSPACE: 'your-aml-workspace'
+  RESOURCE_GROUP: 'your-resource-group'
+  SUBSCRIPTION_ID: 'your-subscription-id'
+  SERVICE_CONNECTION: 'your-service-connection-name'
+
+stages:
+- stage: Build
+  jobs:
+  - job: Build
+    steps:
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '3.x'
+        addToPath: true
+
+    - script: |
+        python -m venv venv
+        source venv/bin/activate
+        pip install -r requirements.txt
+      displayName: 'Install dependencies'
+
+- stage: Train
+  dependsOn: Build
+  jobs:
+  - job: Train
+    steps:
+    - script: |
+        az login --service-principal -u $(AZURE_CLIENT_ID) -p $(AZURE_CLIENT_SECRET) --tenant $(AZURE_TENANT_ID)
+        az ml workspace list -g $(RESOURCE_GROUP) --subscription $(SUBSCRIPTION_ID)
+      displayName: 'Login to Azure'
+
+    - script: |
+        az ml script run --path train.py --workspace-name $(AML_WORKSPACE) --resource-group $(RESOURCE_GROUP)
+      displayName: 'Run training script'
+
+- stage: Deploy
+  dependsOn: Train
+  jobs:
+  - job: Deploy
+    steps:
+    - script: |
+        az login --service-principal -u $(AZURE_CLIENT_ID) -p $(AZURE_CLIENT_SECRET) --tenant $(AZURE_TENANT_ID)
+        az ml model deploy -n mymodel --model-id $(MODEL_ID) --workspace-name $(AML_WORKSPACE) --resource-group $(RESOURCE_GROUP)
+      displayName: 'Deploy model'
