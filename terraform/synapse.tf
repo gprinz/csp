@@ -6,7 +6,7 @@ resource "azurerm_resource_group" "rg_synapse" {
 }
 
 resource "azurerm_synapse_workspace" "synapse" {
-  name                                 = "synapse"
+  name                                 = "s0yn566656ap566656"
   resource_group_name                  = azurerm_resource_group.rg_synapse.name
   location                             = azurerm_resource_group.rg_synapse.location
   storage_data_lake_gen2_filesystem_id = azurerm_storage_account.synapse.id
