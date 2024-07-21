@@ -90,7 +90,7 @@ resource "azurerm_data_factory_dataset_parquet" "yellow_taxi" {
 
   schema_column {
     name = "vendorID"
-    type = "UTF8"
+    type = "String"
   }
 }
 
@@ -107,7 +107,7 @@ resource "azurerm_data_factory_dataset_parquet" "green_taxi" {
 
   schema_column {
     name = "vendorID"
-    type = "UTF8"
+    type = "String"
   }
   // Add the remaining schema fields
 }
@@ -125,7 +125,7 @@ resource "azurerm_data_factory_dataset_parquet" "taxi_fhv" {
 
   schema_column {
     name = "vendorID"
-    type = "UTF8"
+    type = "String"
   }
   // Add the remaining schema fields
 }
