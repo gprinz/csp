@@ -35,7 +35,7 @@ locals {
 
 # Resource Group for production
 resource "azurerm_resource_group" "rg_prod" {
-  name     = "rg${local.current_year}ch"
+  name     = "rg-${local.current_year}-ch"
   location = "West Europe"
 }
 
