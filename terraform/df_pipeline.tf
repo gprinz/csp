@@ -12,7 +12,7 @@ resource "azurerm_data_factory_linked_service_web" "NYCTaxi" {
 resource "azurerm_data_factory_dataset_parquet" "yellow_taxi" {
   name                = "yellow_taxi"
   data_factory_id     = azurerm_data_factory.df.id
-  linked_service_name = azurerm_data_factory_linked_service_azure_blob_storage.NYCTaxi.name
+  linked_service_name = azurerm_data_factory_linked_service_web.NYCTaxi.name
 
   azure_blob_storage_location {
     path      = "yellow"
@@ -29,7 +29,7 @@ resource "azurerm_data_factory_dataset_parquet" "yellow_taxi" {
 resource "azurerm_data_factory_dataset_parquet" "green_taxi" {
   name                = "green_taxi"
   data_factory_id     = azurerm_data_factory.df.id
-  linked_service_name = azurerm_data_factory_linked_service_azure_blob_storage.NYCTaxi.name
+  linked_service_name = azurerm_data_factory_linked_service_web.NYCTaxi.name
 
   azure_blob_storage_location {
     path      = "green"
@@ -47,7 +47,7 @@ resource "azurerm_data_factory_dataset_parquet" "green_taxi" {
 resource "azurerm_data_factory_dataset_parquet" "taxi_fhv" {
   name                = "taxi_fhv"
   data_factory_id     = azurerm_data_factory.df.id
-  linked_service_name = azurerm_data_factory_linked_service_azure_blob_storage.NYCTaxi.name
+  linked_service_name = azurerm_data_factory_linked_service_web.NYCTaxi.name
 
   azure_blob_storage_location {
     path      = "fhv"
