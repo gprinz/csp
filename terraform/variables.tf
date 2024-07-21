@@ -35,8 +35,3 @@ variable "azure_devops_org_service_url" {
   default     = "cps-ethz-2024"
   type        = string
 }
-
-variable "azure_devops_pat" {
-  description = "Azure DevOps Personal Access Token"
-  type        = string
-}
