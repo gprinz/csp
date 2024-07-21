@@ -1,6 +1,6 @@
 
 resource "azurerm_synapse_workspace" "synapse" {
-  name                                 = "synapse_analytics"
+  name                                 = "synapse-analytics"
   resource_group_name                  = azurerm_resource_group.rg_prod.name
   location                             = azurerm_resource_group.rg_prod.location
   storage_data_lake_gen2_filesystem_id = azurerm_storage_account.synapse.id
