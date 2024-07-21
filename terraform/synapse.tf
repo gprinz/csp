@@ -1,12 +1,12 @@
 
 # Resource Group for production
 resource "azurerm_resource_group" "rg_synapse" {
-  name     = "rgsyn${local.current_year}ch2"
+  name     = "rgsyn${local.current_year}ch3"
   location = "West Europe"
 }
 
 resource "azurerm_synapse_workspace" "synapse" {
-  name                                 = "s0yn566656ap566656"
+  name                                 = "shng45"
   resource_group_name                  = azurerm_resource_group.rg_synapse.name
   location                             = azurerm_resource_group.rg_synapse.location
   storage_data_lake_gen2_filesystem_id = azurerm_storage_account.synapse.id
