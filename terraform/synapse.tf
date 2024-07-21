@@ -23,7 +23,7 @@ resource "azurerm_synapse_workspace" "synapse" {
   name                                 = "synapse6335"
   resource_group_name                  = azurerm_resource_group.rg_synapse.name
   location                             = azurerm_resource_group.rg_synapse.location
-  storage_data_lake_gen2_filesystem_id = azurerm_storage_account.synapse.id
+  storage_data_lake_gen2_filesystem_id = azurerm_storage_account.file.id
   sql_administrator_login              = var.SYNAPSE_ADMIN_USER
   sql_administrator_login_password     = var.SYNAPSE_ADMIN_PWD
 
