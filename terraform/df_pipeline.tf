@@ -70,10 +70,17 @@ resource "azurerm_data_factory_pipeline" "taxi_green_copy" {
   JSON
 }
 
+resource "azurerm_data_factory_linked_service_azure_blob_storage" "NYCTaxi" {
+  name              = "NYCTaxi"
+  data_factory_id   = azurerm_data_factory.df.id
+  connection_string = "https://azureopendatastorage.blob.core.windows.net/nyctlc"
+
+}
+
 resource "azurerm_data_factory_dataset_parquet" "yellow_taxi" {
   name                = "yellow_taxi"
   data_factory_id     = azurerm_data_factory.df.id
-  linked_service_name = azurerm_data_factory_linked_service.NYCTaxi.name
+  linked_service_name = azurerm_data_factory_linked_service_azure_blob_storage.NYCTaxi.name
 
   azure_blob_storage_location {
     path      = "yellow"
@@ -90,7 +97,7 @@ resource "azurerm_data_factory_dataset_parquet" "yellow_taxi" {
 resource "azurerm_data_factory_dataset_parquet" "green_taxi" {
   name                = "green_taxi"
   data_factory_id     = azurerm_data_factory.example.id
-  linked_service_name = azurerm_data_factory_linked_service.NYCTaxi.name
+  linked_service_name = azurerm_data_factory_linked_service_azure_blob_storage.NYCTaxi.name
 
   azure_blob_storage_location {
     path      = "green"
@@ -108,7 +115,7 @@ resource "azurerm_data_factory_dataset_parquet" "green_taxi" {
 resource "azurerm_data_factory_dataset_parquet" "taxi_fhv" {
   name                = "taxi_fhv"
   data_factory_id     = azurerm_data_factory.example.id
-  linked_service_name = azurerm_data_factory_linked_service.NYCTaxi.name
+  linked_service_name = azurerm_data_factory_linked_service_azure_blob_storage.NYCTaxi.name
 
   azure_blob_storage_location {
     path      = "fhv"
@@ -123,19 +130,12 @@ resource "azurerm_data_factory_dataset_parquet" "taxi_fhv" {
   // Add the remaining schema fields
 }
 
-resource "azurerm_data_factory_linked_service_blob_storage" "NYCTaxi" {
-  name                = "NYCTaxi"
-  data_factory_id     = azurerm_data_factory.df.id
-  connection_string   = "https://azureopendatastorage.blob.core.windows.net/nyctlc"
-  authentication_type = "Anonymous"
-
-}
 
 
-resource "azurerm_data_factory_linked_service_blob_storage" "Data" {
+
+resource "azurerm_data_factory_linked_service_azure_blob_storage" "Data" {
   name              = "Data"
   data_factory_id   = azurerm_data_factory.df.id
-  type              = "AzureBlobStorage"
   connection_string = azurerm_resource_group.rg_prod.primary_connection_string
 }
 
