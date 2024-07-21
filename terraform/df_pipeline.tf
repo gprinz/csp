@@ -1,6 +1,6 @@
 resource "azurerm_template_deployment" "example" {
   name                = "example-deployment"
-  resource_group_name = azurerm_resource_group.example.name
+  resource_group_name = azurerm_resource_group.rg_prod.name
   deployment_mode     = "Incremental"
 
   template_body = <<TEMPLATE
