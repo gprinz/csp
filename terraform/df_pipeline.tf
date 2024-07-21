@@ -1,10 +1,11 @@
 
 
 
-resource "azurerm_data_factory_linked_service_azure_blob_storage" "NYCTaxi" {
-  name              = "NYCTaxi"
-  data_factory_id   = azurerm_data_factory.df.id
-  connection_string = "DefaultEndpointsProtocol=https;AccountName=azureopendatastorage;EndpointSuffix=blob.core.windows.net/nyctlc"
+resource "azurerm_data_factory_linked_service_web" "NYCTaxi" {
+  name                = "NYCTaxi"
+  data_factory_id     = azurerm_data_factory.df.id
+  authentication_type = "Anonymous"
+  url                 = "https://azureopendatastorage.blob.core.windows.net/nyctlc"
 
 }
 
