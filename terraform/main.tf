@@ -32,11 +32,19 @@ resource "azurerm_resource_group" "rg_prod" {
   location = "West Europe"
 }
 
+# Storage Container named raw-data
+resource "azurerm_storage_container" "raw_data" {
+  name                  = "raw-data"
+  storage_account_name  = azurerm_storage_account.storage_account.name
+  container_access_type = "private"
+}
+
 # Resource Group for machine learning
 resource "azurerm_resource_group" "ml_rg" {
   name     = "rg-ml-${local.current_year}-ch"
   location = "West Europe"
 }
+
 
 # Application Insights configuration
 resource "azurerm_application_insights" "ai" {
