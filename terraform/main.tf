@@ -39,15 +39,6 @@ resource "azurerm_resource_group" "rg_prod" {
   location = "West Europe"
 }
 
-# Storage account configuration
-resource "azurerm_storage_account" "synapse" {
-  name                     = "sasynapse${local.current_year}ch"
-  location                 = azurerm_resource_group.rg_prod.location
-  resource_group_name      = azurerm_resource_group.rg_prod.name
-  account_tier             = "Standard"
-  account_replication_type = "LRS"
-}
-
 
 # Resource Group for machine learning
 resource "azurerm_resource_group" "ml_rg" {
