@@ -40,6 +40,13 @@ resource "azurerm_synapse_workspace" "synapse" {
   }
 }
 
+# Assign Synapse Administrator role to the managed identity
+resource "azurerm_role_assignment" "synapse_admin_role" {
+  principal_id         = azurerm_synapse_workspace.synapse.identity[0].principal_id
+  role_definition_name = "Contributor"
+  scope                = azurerm_synapse_workspace.synapse.id
+}
+
 resource "azurerm_synapse_sql_pool" "sql" {
   name                 = "dwh"
   synapse_workspace_id = azurerm_synapse_workspace.synapse.id
