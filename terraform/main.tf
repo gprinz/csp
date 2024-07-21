@@ -32,12 +32,7 @@ resource "azurerm_resource_group" "rg_prod" {
   location = "West Europe"
 }
 
-# Storage Container named raw-data
-resource "azurerm_storage_container" "raw_data" {
-  name                  = "raw-data"
-  storage_account_name  = azurerm_storage_account.storage_account.name
-  container_access_type = "private"
-}
+
 
 # Resource Group for machine learning
 resource "azurerm_resource_group" "ml_rg" {
@@ -80,6 +75,13 @@ resource "azurerm_storage_account" "raw_data" {
   resource_group_name      = azurerm_resource_group.rg_prod.name
   account_tier             = "Standard"
   account_replication_type = "LRS"
+}
+
+# Storage Container named raw-data
+resource "azurerm_storage_container" "raw_data" {
+  name                  = "raw-data"
+  storage_account_name  = azurerm_storage_account.raw_data.name
+  container_access_type = "private"
 }
 
 // Define a container called "taxi" in the Azure Storage Account
