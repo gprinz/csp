@@ -10,7 +10,8 @@ terraform {
 provider "azurerm" {
   features {
     key_vault {
-      purge_soft_delete_on_destroy = true
+      purge_soft_delete_on_destroy = false
+      recover_soft_deleted_keys    = true
     }
   }
 }
@@ -70,7 +71,7 @@ resource "azurerm_storage_account" "ml" {
 
 # Storage account configuration
 resource "azurerm_storage_account" "raw_data" {
-  name                     = "data"
+  name                     = "data${local.current_year}ch"
   location                 = azurerm_resource_group.rg_prod.location
   resource_group_name      = azurerm_resource_group.rg_prod.name
   account_tier             = "Standard"
@@ -109,10 +110,11 @@ resource "azurerm_key_vault_access_policy" "kv_access" {
 
 # Key Vault key
 resource "azurerm_key_vault_key" "kv_key" {
-  name         = "kv-key-${local.current_year}ch"
-  key_vault_id = azurerm_key_vault.kv.id
-  key_type     = "RSA"
-  key_size     = 2048
+  name                = "kv-key-${local.current_year}ch"
+  key_vault_id        = azurerm_key_vault.kv.id
+  key_type            = "RSA"
+  key_size            = 2048
+  soft_delete_enabled = true
 
   key_opts = [
     "decrypt",
