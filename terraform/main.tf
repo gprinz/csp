@@ -57,7 +57,7 @@ resource "azurerm_key_vault" "kv" {
   resource_group_name      = azurerm_resource_group.ml_rg.name
   tenant_id                = data.azurerm_client_config.current.tenant_id
   sku_name                 = "premium"
-  purge_protection_enabled = false
+  purge_protection_enabled = true
 }
 
 # Storage account configuration
@@ -110,11 +110,10 @@ resource "azurerm_key_vault_access_policy" "kv_access" {
 
 # Key Vault key
 resource "azurerm_key_vault_key" "kv_key" {
-  name                = "kv-key-${local.current_year}ch"
-  key_vault_id        = azurerm_key_vault.kv.id
-  key_type            = "RSA"
-  key_size            = 2048
-  soft_delete_enabled = true
+  name         = "kv-key-${local.current_year}ch"
+  key_vault_id = azurerm_key_vault.kv.id
+  key_type     = "RSA"
+  key_size     = 2048
 
   key_opts = [
     "decrypt",
