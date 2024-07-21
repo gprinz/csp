@@ -2,9 +2,9 @@
 
 
 resource "azurerm_data_factory_linked_service_azure_blob_storage" "NYCTaxi" {
-  name             = "NYCTaxi"
-  data_factory_id  = azurerm_data_factory.df.id
-  service_endpoint = "https://azureopendatastorage.blob.core.windows.net/nyctlc"
+  name              = "NYCTaxi"
+  data_factory_id   = azurerm_data_factory.df.id
+  connection_string = "DefaultEndpointsProtocol=https;AccountName=azureopendatastorage;EndpointSuffix=blob.core.windows.net/nyctlc"
 
 }
 
