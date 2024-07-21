@@ -86,19 +86,6 @@ resource "azurerm_storage_account" "raw_data" {
   account_replication_type = "LRS"
 }
 
-# Storage Container named raw-data
-resource "azurerm_storage_container" "raw_data" {
-  name                  = "raw-data"
-  storage_account_name  = azurerm_storage_account.raw_data.name
-  container_access_type = "private"
-}
-
-// Define a container called "taxi" in the Azure Storage Account
-resource "azurerm_storage_container" "taxi" {
-  name                  = "taxi"
-  storage_account_name  = azurerm_storage_account.datalake.name
-  container_access_type = "private"
-}
 
 # Key Vault access policy
 resource "azurerm_key_vault_access_policy" "kv_access" {
