@@ -3,7 +3,7 @@ name: Terraform Deployment
 on: [push, pull_request]
 
 jobs:
-  deploy:
+  deploy-terraform:
     name: 'Terraform Deployment'
     runs-on: ubuntu-latest
     environment: production
@@ -48,3 +48,26 @@ jobs:
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -compact-warnings -auto-approve -input=false
+
+  deploy-arm:
+    name: 'Terraform Deployment'
+    environment: production
+    runs-on: ubuntu-latest
+    needs: deploy-terraform
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+      
+    - name: Deploy ARM template
+      uses: azure/arm-deploy@v1
+      with:
+        scopeLevel: resourcegroup
+        subscriptionId: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+        resourceGroupName: 'your-resource-group'
+        template: './path/to/your/template.json'
+        parameters: './path/to/your/parameters.json'

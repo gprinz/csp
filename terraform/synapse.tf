@@ -1,6 +1,6 @@
 
 resource "azurerm_synapse_workspace" "synapse" {
-  name                                 = "Synapse Analytics"
+  name                                 = "synapse_analytics"
   resource_group_name                  = azurerm_resource_group.rg_prod.name
   location                             = azurerm_resource_group.rg_prod.location
   storage_data_lake_gen2_filesystem_id = azurerm_storage_account.synapse.id
@@ -9,7 +9,7 @@ resource "azurerm_synapse_workspace" "synapse" {
 }
 
 resource "azurerm_synapse_sql_pool" "sql" {
-  name                 = "DWH"
+  name                 = "dwh"
   synapse_workspace_id = azurerm_synapse_workspace.synapse.id
   sku_name             = "DW100c"
   create_mode          = "Default"
