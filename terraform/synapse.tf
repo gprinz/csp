@@ -1,8 +1,14 @@
 
+# Resource Group for production
+resource "azurerm_resource_group" "rg_synapse" {
+  name     = "rgsyn${local.current_year}ch"
+  location = "West Europe"
+}
+
 resource "azurerm_synapse_workspace" "synapse" {
   name                                 = "synapse"
-  resource_group_name                  = azurerm_resource_group.rg_prod.name
-  location                             = azurerm_resource_group.rg_prod.location
+  resource_group_name                  = azurerm_resource_group.rg_synapse.name
+  location                             = azurerm_resource_group.rg_synapse.location
   storage_data_lake_gen2_filesystem_id = azurerm_storage_account.synapse.id
   sql_administrator_login              = var.SYNAPSE_ADMIN_USER
   sql_administrator_login_password     = var.SYNAPSE_ADMIN_PWD
