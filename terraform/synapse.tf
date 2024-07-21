@@ -12,6 +12,10 @@ resource "azurerm_synapse_workspace" "synapse" {
   storage_data_lake_gen2_filesystem_id = azurerm_storage_account.synapse.id
   sql_administrator_login              = var.SYNAPSE_ADMIN_USER
   sql_administrator_login_password     = var.SYNAPSE_ADMIN_PWD
+
+  identity {
+    type = "SystemAssigned"
+  }
 }
 
 resource "azurerm_synapse_sql_pool" "sql" {
