@@ -33,8 +33,7 @@
         }
     },
     "variables": {
-        "factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]",
-        "resourceGroup": "rg-2024-ch"
+        "factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
     },
     "resources": [
         {
@@ -602,7 +601,7 @@
             "properties": {
                 "type": "ManagedIdentity",
                 "typeProperties": {
-                    "resourceId": "[concat('/subscriptions/796313f9-881f-4bee-bd46-ba6ad10afbb4/resourcegroups/', variables('resourceGroup'), '/providers/Microsoft.ManagedIdentity/userAssignedIdentities/uai-all')]"
+                    "resourceId": "/subscriptions/796313f9-881f-4bee-bd46-ba6ad10afbb4/resourcegroups/rg-2024-ch/providers/Microsoft.ManagedIdentity/userAssignedIdentities/uai-all"
                 }
             },
             "dependsOn": []
@@ -614,7 +613,7 @@
             "properties": {
                 "type": "ManagedIdentity",
                 "typeProperties": {
-                    "resourceId": "[concat('/subscriptions/796313f9-881f-4bee-bd46-ba6ad10afbb4/resourcegroups/', variables('resourceGroup'), '/providers/Microsoft.ManagedIdentity/userAssignedIdentities/uai-datafactory')]"
+                    "resourceId": "/subscriptions/796313f9-881f-4bee-bd46-ba6ad10afbb4/resourcegroups/rg-2024-ch/providers/Microsoft.ManagedIdentity/userAssignedIdentities/uai-datafactory"
                 }
             },
             "dependsOn": []
