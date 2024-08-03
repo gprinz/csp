@@ -5,22 +5,16 @@
         "factoryName": {
             "value": "df-2024-ch"
         },
-        "synapse_password": {
-            "value": ""
+        "DFSynapse_password": {
+            "value": "NeuBach4"
         },
-        "linkedService1_connectionString": {
-            "value": ""
-        },
-        "linkedService2_connectionString": {
-            "value": ""
-        },
-        "synapse_properties_typeProperties_server": {
+        "DFSynapse_properties_typeProperties_server": {
             "value": "synapse6335.sql.azuresynapse.net"
         },
-        "synapse_properties_typeProperties_database": {
+        "DFSynapse_properties_typeProperties_database": {
             "value": "dwh"
         },
-        "synapse_properties_typeProperties_userName": {
+        "DFSynapse_properties_typeProperties_userName": {
             "value": "sqladminuser"
         }
     }
