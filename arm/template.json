@@ -279,8 +279,8 @@
                 "lastPublishTime": "2024-08-03T13:36:52Z"
             },
             "dependsOn": [
-                "[resourceId('Microsoft.DataFactory/factories/datasets', 'source_taxi_green')]",
-                "[resourceId('Microsoft.DataFactory/factories/datasets', 'destination_taxi_green')]"
+                "[resourceId('Microsoft.DataFactory/factories/datasets', parameters('factoryName'), 'source_taxi_green')]",
+                "[resourceId('Microsoft.DataFactory/factories/datasets', parameters('factoryName'), 'destination_taxi_green')]"
             ]
         },
         {
