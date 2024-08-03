@@ -30,7 +30,7 @@
     "resources": [
         {
             "name": "[concat(variables('factoryId'), '/OpenDataTaxi')]",
-            "type": "Microsoft.DataFactory/factories/linkedServices",
+            "type": "[concat(variables('factoryId'), '/linkedServices')]",
             "apiVersion": "2018-06-01",
             "properties": {
                 "annotations": [],
