@@ -177,10 +177,7 @@
                         "type": "INT32"
                     }
                 ]
-            },
-            "dependsOn": [
-                "[concat(parameters('factoryName'), '/linkedServices/OpenDataTaxi')]"
-            ]
+            }
         },
         {
             "name": "[concat(parameters('factoryName'), '/destination_taxi_green')]",
