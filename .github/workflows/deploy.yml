@@ -66,8 +66,7 @@ jobs:
     - name: Deploy ARM template
       uses: azure/arm-deploy@v1
       with:
-        scopeLevel: resourcegroup
+        scope: subscription
         subscriptionId: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-        resourceGroupName: 'your-resource-group'
-        template: './path/to/your/template.json'
-        parameters: './path/to/your/parameters.json'
+        template: 'arm/template.json'
+        parameters: 'arm/parameters.json'
