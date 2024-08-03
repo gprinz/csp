@@ -68,5 +68,6 @@ jobs:
       with:
         scope: subscription
         subscriptionId: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+        region: "West Europe"
         template: 'arm/template.json'
         parameters: 'arm/parameters.json'
