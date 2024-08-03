@@ -176,7 +176,7 @@
                 ]
             },
             "dependsOn": [
-                "[resourceId('Microsoft.DataFactory/factories/linkedServices', parameters('dataFactoryName'),  'OpenDataTaxi')]"
+                "[resourceId('Microsoft.DataFactory/factories/linkedServices', parameters('factoryName'),  'OpenDataTaxi')]"
             ]
         },
         {
