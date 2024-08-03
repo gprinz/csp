@@ -64,7 +64,7 @@ jobs:
     - name: Deploy ARM template
       uses: azure/arm-deploy@v1
       with:
-        scope: subscription
+        scope: resourceGroup
         subscriptionId: ${{ secrets.ARM_SUBSCRIPTION_ID }}
         resourceGroupName: rg-2024-ch
         region: "West Europe"
