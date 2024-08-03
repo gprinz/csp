@@ -177,7 +177,8 @@
                         "type": "INT32"
                     }
                 ]
-            }
+            },
+            "dependsOn": []
         },
         {
             "name": "[concat(parameters('factoryName'), '/destination_taxi_green')]",
@@ -280,10 +281,7 @@
                 "annotations": [],
                 "lastPublishTime": "2024-08-03T13:36:52Z"
             },
-            "dependsOn": [
-                "[concat(variables('factoryId'), '/datasets/source_taxi_green')]",
-                "[concat(variables('factoryId'), '/datasets/destination_taxi_green')]"
-            ]
+            "dependsOn": []
         },
         {
             "name": "[concat(parameters('factoryName'), '/trigger_weekly')]",
@@ -311,9 +309,7 @@
                     }
                 }
             },
-            "dependsOn": [
-                "[concat(variables('factoryId'), '/pipelines/copy_taxi_green')]"
-            ]
+            "dependsOn": []
         }
     ]
 }
