@@ -44,6 +44,383 @@
       "factoryId": "[concat('/subscriptions/796313f9-881f-4bee-bd46-ba6ad10afbb4/resourcegroups/rg-2024-ch/providers/Microsoft.DataFactory/factories/', parameters('factoryName'))]"
     },
     "resources": [
+        {
+            "name": "[concat(parameters('factoryName'), '/taxi_copy')]",
+            "type": "Microsoft.DataFactory/factories/pipelines",
+            "apiVersion": "2018-06-01",
+            "properties": {
+              "activities": [
+                {
+                  "name": "Copy_ust",
+                  "type": "Copy",
+                  "dependsOn": [],
+                  "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                  },
+                  "userProperties": [
+                    {
+                      "name": "Source",
+                      "value": "nyctlc//"
+                    },
+                    {
+                      "name": "Destination",
+                      "value": "dbo.nyctlc"
+                    }
+                  ],
+                  "typeProperties": {
+                    "source": {
+                      "type": "ParquetSource",
+                      "storeSettings": {
+                        "type": "AzureBlobStorageReadSettings",
+                        "recursive": true,
+                        "wildcardFolderPath": "green",
+                        "wildcardFileName": "*.parquet",
+                        "enablePartitionDiscovery": false
+                      },
+                      "formatSettings": {
+                        "type": "ParquetReadSettings"
+                      }
+                    },
+                    "sink": {
+                      "type": "SqlDWSink",
+                      "writeBehavior": "Insert",
+                      "tableOption": "autoCreate"
+                    },
+                    "enableStaging": false,
+                    "enableSkipIncompatibleRow": true,
+                    "validateDataConsistency": false,
+                    "logSettings": {
+                      "enableCopyActivityLog": true,
+                      "copyActivityLogSettings": {
+                        "logLevel": "Info",
+                        "enableReliableLogging": false
+                      },
+                      "logLocationSettings": {
+                        "linkedServiceName": {
+                          "referenceName": "linkedService2",
+                          "type": "LinkedServiceReference"
+                        }
+                      }
+                    },
+                    "translator": {
+                      "type": "TabularTranslator",
+                      "mappings": [
+                        {
+                          "source": {
+                            "name": "vendorID",
+                            "type": "Int32",
+                            "physicalType": "INT32"
+                          },
+                          "sink": {
+                            "name": "vendorID",
+                            "type": "Int32",
+                            "physicalType": "int"
+                          }
+                        },
+                        {
+                          "source": {
+                            "name": "lpepPickupDatetime",
+                            "type": "DateTime",
+                            "physicalType": "INT96"
+                          },
+                          "sink": {
+                            "name": "lpepPickupDatetime",
+                            "type": "DateTime",
+                            "physicalType": "datetime2"
+                          }
+                        },
+                        {
+                          "source": {
+                            "name": "lpepDropoffDatetime",
+                            "type": "DateTime",
+                            "physicalType": "INT96"
+                          },
+                          "sink": {
+                            "name": "lpepDropoffDatetime",
+                            "type": "DateTime",
+                            "physicalType": "datetime2"
+                          }
+                        },
+                        {
+                          "source": {
+                            "name": "passengerCount",
+                            "type": "Int32",
+                            "physicalType": "INT32"
+                          },
+                          "sink": {
+                            "name": "passengerCount",
+                            "type": "Int32",
+                            "physicalType": "int"
+                          }
+                        },
+                        {
+                          "source": {
+                            "name": "tripDistance",
+                            "type": "Double",
+                            "physicalType": "DOUBLE"
+                          },
+                          "sink": {
+                            "name": "tripDistance",
+                            "type": "Double",
+                            "physicalType": "float"
+                          }
+                        },
+                        {
+                          "source": {
+                            "name": "puLocationId",
+                            "type": "String",
+                            "physicalType": "UTF8"
+                          },
+                          "sink": {
+                            "name": "puLocationId",
+                            "type": "String",
+                            "physicalType": "nvarchar"
+                          }
+                        },
+                        {
+                          "source": {
+                            "name": "doLocationId",
+                            "type": "String",
+                            "physicalType": "UTF8"
+                          },
+                          "sink": {
+                            "name": "doLocationId",
+                            "type": "String",
+                            "physicalType": "nvarchar"
+                          }
+                        },
+                        {
+                          "source": {
+                            "name": "pickupLongitude",
+                            "type": "Double",
+                            "physicalType": "DOUBLE"
+                          },
+                          "sink": {
+                            "name": "pickupLongitude",
+                            "type": "Double",
+                            "physicalType": "float"
+                          }
+                        },
+                        {
+                          "source": {
+                            "name": "pickupLatitude",
+                            "type": "Double",
+                            "physicalType": "DOUBLE"
+                          },
+                          "sink": {
+                            "name": "pickupLatitude",
+                            "type": "Double",
+                            "physicalType": "float"
+                          }
+                        },
+                        {
+                          "source": {
+                            "name": "dropoffLongitude",
+                            "type": "Double",
+                            "physicalType": "DOUBLE"
+                          },
+                          "sink": {
+                            "name": "dropoffLongitude",
+                            "type": "Double",
+                            "physicalType": "float"
+                          }
+                        },
+                        {
+                          "source": {
+                            "name": "dropoffLatitude",
+                            "type": "Double",
+                            "physicalType": "DOUBLE"
+                          },
+                          "sink": {
+                            "name": "dropoffLatitude",
+                            "type": "Double",
+                            "physicalType": "float"
+                          }
+                        },
+                        {
+                          "source": {
+                            "name": "rateCodeID",
+                            "type": "Int32",
+                            "physicalType": "INT32"
+                          },
+                          "sink": {
+                            "name": "rateCodeID",
+                            "type": "Int32",
+                            "physicalType": "int"
+                          }
+                        },
+                        {
+                          "source": {
+                            "name": "storeAndFwdFlag",
+                            "type": "String",
+                            "physicalType": "UTF8"
+                          },
+                          "sink": {
+                            "name": "storeAndFwdFlag",
+                            "type": "String",
+                            "physicalType": "nvarchar"
+                          }
+                        },
+                        {
+                          "source": {
+                            "name": "paymentType",
+                            "type": "Int32",
+                            "physicalType": "INT32"
+                          },
+                          "sink": {
+                            "name": "paymentType",
+                            "type": "Int32",
+                            "physicalType": "int"
+                          }
+                        },
+                        {
+                          "source": {
+                            "name": "fareAmount",
+                            "type": "Double",
+                            "physicalType": "DOUBLE"
+                          },
+                          "sink": {
+                            "name": "fareAmount",
+                            "type": "Double",
+                            "physicalType": "float"
+                          }
+                        },
+                        {
+                          "source": {
+                            "name": "extra",
+                            "type": "Double",
+                            "physicalType": "DOUBLE"
+                          },
+                          "sink": {
+                            "name": "extra",
+                            "type": "Double",
+                            "physicalType": "float"
+                          }
+                        },
+                        {
+                          "source": {
+                            "name": "mtaTax",
+                            "type": "Double",
+                            "physicalType": "DOUBLE"
+                          },
+                          "sink": {
+                            "name": "mtaTax",
+                            "type": "Double",
+                            "physicalType": "float"
+                          }
+                        },
+                        {
+                          "source": {
+                            "name": "improvementSurcharge",
+                            "type": "String",
+                            "physicalType": "UTF8"
+                          },
+                          "sink": {
+                            "name": "improvementSurcharge",
+                            "type": "String",
+                            "physicalType": "nvarchar"
+                          }
+                        },
+                        {
+                          "source": {
+                            "name": "tipAmount",
+                            "type": "Double",
+                            "physicalType": "DOUBLE"
+                          },
+                          "sink": {
+                            "name": "tipAmount",
+                            "type": "Double",
+                            "physicalType": "float"
+                          }
+                        },
+                        {
+                          "source": {
+                            "name": "tollsAmount",
+                            "type": "Double",
+                            "physicalType": "DOUBLE"
+                          },
+                          "sink": {
+                            "name": "tollsAmount",
+                            "type": "Double",
+                            "physicalType": "float"
+                          }
+                        },
+                        {
+                          "source": {
+                            "name": "ehailFee",
+                            "type": "Double",
+                            "physicalType": "DOUBLE"
+                          },
+                          "sink": {
+                            "name": "ehailFee",
+                            "type": "Double",
+                            "physicalType": "float"
+                          }
+                        },
+                        {
+                          "source": {
+                            "name": "totalAmount",
+                            "type": "Double",
+                            "physicalType": "DOUBLE"
+                          },
+                          "sink": {
+                            "name": "totalAmount",
+                            "type": "Double",
+                            "physicalType": "float"
+                          }
+                        },
+                        {
+                          "source": {
+                            "name": "tripType",
+                            "type": "Int32",
+                            "physicalType": "INT32"
+                          },
+                          "sink": {
+                            "name": "tripType",
+                            "type": "Int32",
+                            "physicalType": "int"
+                          }
+                        }
+                      ],
+                      "typeConversion": true,
+                      "typeConversionSettings": {
+                        "allowDataTruncation": true,
+                        "treatBooleanAsNumber": false
+                      }
+                    }
+                  },
+                  "inputs": [
+                    {
+                      "referenceName": "SourceDataset_ust",
+                      "type": "DatasetReference",
+                      "parameters": {}
+                    }
+                  ],
+                  "outputs": [
+                    {
+                      "referenceName": "DestinationDataset_ust",
+                      "type": "DatasetReference",
+                      "parameters": {}
+                    }
+                  ]
+                }
+              ],
+              "policy": {
+                "elapsedTimeMetric": {}
+              },
+              "annotations": [],
+              "lastPublishTime": "2024-07-21T19:58:12Z"
+            },
+            "dependsOn": [
+              "[concat(variables('factoryId'), '/datasets/SourceDataset_ust')]",
+              "[concat(variables('factoryId'), '/datasets/DestinationDataset_ust')]",
+              "[concat(variables('factoryId'), '/linkedServices/linkedService2')]"
+            ]
+          },
       {
         "name": "[concat(parameters('factoryName'), '/Trigger_ch7')]",
         "type": "Microsoft.DataFactory/factories/triggers",
@@ -223,383 +600,6 @@
         },
         "dependsOn": [
           "[concat(variables('factoryId'), '/linkedServices/nyc_taxi')]"
-        ]
-      },
-      {
-        "name": "[concat('/subscriptions/796313f9-881f-4bee-bd46-ba6ad10afbb4/resourcegroups/rg-2024-ch/providers/Microsoft.DataFactory/factories/', parameters('factoryName'), '/taxi_copy')]",
-        "type": "Microsoft.DataFactory/factories/pipelines",
-        "apiVersion": "2018-06-01",
-        "properties": {
-          "activities": [
-            {
-              "name": "Copy_ust",
-              "type": "Copy",
-              "dependsOn": [],
-              "policy": {
-                "timeout": "0.12:00:00",
-                "retry": 0,
-                "retryIntervalInSeconds": 30,
-                "secureOutput": false,
-                "secureInput": false
-              },
-              "userProperties": [
-                {
-                  "name": "Source",
-                  "value": "nyctlc//"
-                },
-                {
-                  "name": "Destination",
-                  "value": "dbo.nyctlc"
-                }
-              ],
-              "typeProperties": {
-                "source": {
-                  "type": "ParquetSource",
-                  "storeSettings": {
-                    "type": "AzureBlobStorageReadSettings",
-                    "recursive": true,
-                    "wildcardFolderPath": "green",
-                    "wildcardFileName": "*.parquet",
-                    "enablePartitionDiscovery": false
-                  },
-                  "formatSettings": {
-                    "type": "ParquetReadSettings"
-                  }
-                },
-                "sink": {
-                  "type": "SqlDWSink",
-                  "writeBehavior": "Insert",
-                  "tableOption": "autoCreate"
-                },
-                "enableStaging": false,
-                "enableSkipIncompatibleRow": true,
-                "validateDataConsistency": false,
-                "logSettings": {
-                  "enableCopyActivityLog": true,
-                  "copyActivityLogSettings": {
-                    "logLevel": "Info",
-                    "enableReliableLogging": false
-                  },
-                  "logLocationSettings": {
-                    "linkedServiceName": {
-                      "referenceName": "linkedService2",
-                      "type": "LinkedServiceReference"
-                    }
-                  }
-                },
-                "translator": {
-                  "type": "TabularTranslator",
-                  "mappings": [
-                    {
-                      "source": {
-                        "name": "vendorID",
-                        "type": "Int32",
-                        "physicalType": "INT32"
-                      },
-                      "sink": {
-                        "name": "vendorID",
-                        "type": "Int32",
-                        "physicalType": "int"
-                      }
-                    },
-                    {
-                      "source": {
-                        "name": "lpepPickupDatetime",
-                        "type": "DateTime",
-                        "physicalType": "INT96"
-                      },
-                      "sink": {
-                        "name": "lpepPickupDatetime",
-                        "type": "DateTime",
-                        "physicalType": "datetime2"
-                      }
-                    },
-                    {
-                      "source": {
-                        "name": "lpepDropoffDatetime",
-                        "type": "DateTime",
-                        "physicalType": "INT96"
-                      },
-                      "sink": {
-                        "name": "lpepDropoffDatetime",
-                        "type": "DateTime",
-                        "physicalType": "datetime2"
-                      }
-                    },
-                    {
-                      "source": {
-                        "name": "passengerCount",
-                        "type": "Int32",
-                        "physicalType": "INT32"
-                      },
-                      "sink": {
-                        "name": "passengerCount",
-                        "type": "Int32",
-                        "physicalType": "int"
-                      }
-                    },
-                    {
-                      "source": {
-                        "name": "tripDistance",
-                        "type": "Double",
-                        "physicalType": "DOUBLE"
-                      },
-                      "sink": {
-                        "name": "tripDistance",
-                        "type": "Double",
-                        "physicalType": "float"
-                      }
-                    },
-                    {
-                      "source": {
-                        "name": "puLocationId",
-                        "type": "String",
-                        "physicalType": "UTF8"
-                      },
-                      "sink": {
-                        "name": "puLocationId",
-                        "type": "String",
-                        "physicalType": "nvarchar"
-                      }
-                    },
-                    {
-                      "source": {
-                        "name": "doLocationId",
-                        "type": "String",
-                        "physicalType": "UTF8"
-                      },
-                      "sink": {
-                        "name": "doLocationId",
-                        "type": "String",
-                        "physicalType": "nvarchar"
-                      }
-                    },
-                    {
-                      "source": {
-                        "name": "pickupLongitude",
-                        "type": "Double",
-                        "physicalType": "DOUBLE"
-                      },
-                      "sink": {
-                        "name": "pickupLongitude",
-                        "type": "Double",
-                        "physicalType": "float"
-                      }
-                    },
-                    {
-                      "source": {
-                        "name": "pickupLatitude",
-                        "type": "Double",
-                        "physicalType": "DOUBLE"
-                      },
-                      "sink": {
-                        "name": "pickupLatitude",
-                        "type": "Double",
-                        "physicalType": "float"
-                      }
-                    },
-                    {
-                      "source": {
-                        "name": "dropoffLongitude",
-                        "type": "Double",
-                        "physicalType": "DOUBLE"
-                      },
-                      "sink": {
-                        "name": "dropoffLongitude",
-                        "type": "Double",
-                        "physicalType": "float"
-                      }
-                    },
-                    {
-                      "source": {
-                        "name": "dropoffLatitude",
-                        "type": "Double",
-                        "physicalType": "DOUBLE"
-                      },
-                      "sink": {
-                        "name": "dropoffLatitude",
-                        "type": "Double",
-                        "physicalType": "float"
-                      }
-                    },
-                    {
-                      "source": {
-                        "name": "rateCodeID",
-                        "type": "Int32",
-                        "physicalType": "INT32"
-                      },
-                      "sink": {
-                        "name": "rateCodeID",
-                        "type": "Int32",
-                        "physicalType": "int"
-                      }
-                    },
-                    {
-                      "source": {
-                        "name": "storeAndFwdFlag",
-                        "type": "String",
-                        "physicalType": "UTF8"
-                      },
-                      "sink": {
-                        "name": "storeAndFwdFlag",
-                        "type": "String",
-                        "physicalType": "nvarchar"
-                      }
-                    },
-                    {
-                      "source": {
-                        "name": "paymentType",
-                        "type": "Int32",
-                        "physicalType": "INT32"
-                      },
-                      "sink": {
-                        "name": "paymentType",
-                        "type": "Int32",
-                        "physicalType": "int"
-                      }
-                    },
-                    {
-                      "source": {
-                        "name": "fareAmount",
-                        "type": "Double",
-                        "physicalType": "DOUBLE"
-                      },
-                      "sink": {
-                        "name": "fareAmount",
-                        "type": "Double",
-                        "physicalType": "float"
-                      }
-                    },
-                    {
-                      "source": {
-                        "name": "extra",
-                        "type": "Double",
-                        "physicalType": "DOUBLE"
-                      },
-                      "sink": {
-                        "name": "extra",
-                        "type": "Double",
-                        "physicalType": "float"
-                      }
-                    },
-                    {
-                      "source": {
-                        "name": "mtaTax",
-                        "type": "Double",
-                        "physicalType": "DOUBLE"
-                      },
-                      "sink": {
-                        "name": "mtaTax",
-                        "type": "Double",
-                        "physicalType": "float"
-                      }
-                    },
-                    {
-                      "source": {
-                        "name": "improvementSurcharge",
-                        "type": "String",
-                        "physicalType": "UTF8"
-                      },
-                      "sink": {
-                        "name": "improvementSurcharge",
-                        "type": "String",
-                        "physicalType": "nvarchar"
-                      }
-                    },
-                    {
-                      "source": {
-                        "name": "tipAmount",
-                        "type": "Double",
-                        "physicalType": "DOUBLE"
-                      },
-                      "sink": {
-                        "name": "tipAmount",
-                        "type": "Double",
-                        "physicalType": "float"
-                      }
-                    },
-                    {
-                      "source": {
-                        "name": "tollsAmount",
-                        "type": "Double",
-                        "physicalType": "DOUBLE"
-                      },
-                      "sink": {
-                        "name": "tollsAmount",
-                        "type": "Double",
-                        "physicalType": "float"
-                      }
-                    },
-                    {
-                      "source": {
-                        "name": "ehailFee",
-                        "type": "Double",
-                        "physicalType": "DOUBLE"
-                      },
-                      "sink": {
-                        "name": "ehailFee",
-                        "type": "Double",
-                        "physicalType": "float"
-                      }
-                    },
-                    {
-                      "source": {
-                        "name": "totalAmount",
-                        "type": "Double",
-                        "physicalType": "DOUBLE"
-                      },
-                      "sink": {
-                        "name": "totalAmount",
-                        "type": "Double",
-                        "physicalType": "float"
-                      }
-                    },
-                    {
-                      "source": {
-                        "name": "tripType",
-                        "type": "Int32",
-                        "physicalType": "INT32"
-                      },
-                      "sink": {
-                        "name": "tripType",
-                        "type": "Int32",
-                        "physicalType": "int"
-                      }
-                    }
-                  ],
-                  "typeConversion": true,
-                  "typeConversionSettings": {
-                    "allowDataTruncation": true,
-                    "treatBooleanAsNumber": false
-                  }
-                }
-              },
-              "inputs": [
-                {
-                  "referenceName": "SourceDataset_ust",
-                  "type": "DatasetReference",
-                  "parameters": {}
-                }
-              ],
-              "outputs": [
-                {
-                  "referenceName": "DestinationDataset_ust",
-                  "type": "DatasetReference",
-                  "parameters": {}
-                }
-              ]
-            }
-          ],
-          "policy": {
-            "elapsedTimeMetric": {}
-          },
-          "annotations": [],
-          "lastPublishTime": "2024-07-21T19:58:12Z"
-        },
-        "dependsOn": [
-          "[concat(variables('factoryId'), '/datasets/SourceDataset_ust')]",
-          "[concat(variables('factoryId'), '/datasets/DestinationDataset_ust')]",
-          "[concat(variables('factoryId'), '/linkedServices/linkedService2')]"
         ]
       },
       {
