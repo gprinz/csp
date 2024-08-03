@@ -176,7 +176,7 @@
                 ]
             },
             "dependsOn": [
-                "[resourceId('Microsoft.DataFactory/factories/linkedServices, 'OpenDataTaxi')]"
+                "[resourceId('Microsoft.DataFactory/factories/linkedServices', 'OpenDataTaxi')]"
             ]
         },
         {
@@ -198,9 +198,6 @@
             }
 
         },
-
-
-
         {
             "name": "[concat(parameters('factoryName'), '/copy_taxi_green')]",
             "type": "Microsoft.DataFactory/factories/pipelines",
@@ -282,8 +279,8 @@
                 "lastPublishTime": "2024-08-03T13:36:52Z"
             },
             "dependsOn": [
-                "['Microsoft.DataFactory/factories/datasets', 'source_taxi_green')]",
-                "['Microsoft.DataFactory/factories/datasets', 'destination_taxi_green')]"
+                "[resourceId('Microsoft.DataFactory/factories/datasets', 'source_taxi_green')]",
+                "[resourceId('Microsoft.DataFactory/factories/datasets', 'destination_taxi_green')]"
             ]
         },
         {
