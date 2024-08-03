@@ -26,7 +26,7 @@
     },
     "resources": [
         {
-            "name": "OpenDataTaxi",
+            "name": "[concat(parameters('factoryName'), '/OpenDataTaxi')]",
             "type": "Microsoft.DataFactory/factories/linkedServices",
             "apiVersion": "2018-06-01",
             "properties": {
@@ -40,7 +40,7 @@
             "dependsOn": []
         },
         {
-            "name": "DFSynapse",
+            "name": "[concat(parameters('factoryName'), '/DFSynapse')]",
             "type": "Microsoft.DataFactory/factories/linkedServices",
             "apiVersion": "2018-06-01",
             "properties": {
@@ -62,7 +62,7 @@
             "dependsOn": []
         },
         {
-            "name": "source_taxi_green",
+            "name": "[concat(parameters('factoryName'), '/source_taxi_green')]",
             "type": "Microsoft.DataFactory/factories/datasets",
             "apiVersion": "2018-06-01",
             "properties": {
@@ -180,7 +180,7 @@
             ]
         },
         {
-            "name": "destination_taxi_green",
+            "name": "[concat(parameters('factoryName'), '/destination_taxi_green')]",
             "type": "Microsoft.DataFactory/factories/datasets",
             "apiVersion": "2018-06-01",
             "properties": {
@@ -202,7 +202,7 @@
 
 
         {
-            "name": "copy_taxi_green",
+            "name": "[concat(parameters('factoryName'), '/copy_taxi_green')]",
             "type": "Microsoft.DataFactory/factories/pipelines",
             "apiVersion": "2018-06-01",
             "properties": {
@@ -287,7 +287,7 @@
             ]
         },
         {
-            "name": "trigger_weekly",
+            "name": "[concat(parameters('factoryName'), '/trigger_weekly')]",
             "type": "Microsoft.DataFactory/factories/triggers",
             "apiVersion": "2018-06-01",
             "properties": {
