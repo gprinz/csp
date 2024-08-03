@@ -226,7 +226,7 @@
         ]
       },
       {
-        "name": "[concat(parameters('factoryName'), '/taxi_copy')]",
+        "name": "[concat('/subscriptions/796313f9-881f-4bee-bd46-ba6ad10afbb4/resourcegroups/rg-2024-ch/providers/Microsoft.DataFactory/factories/', parameters('factoryName'), '/taxi_copy')]",
         "type": "Microsoft.DataFactory/factories/pipelines",
         "apiVersion": "2018-06-01",
         "properties": {
