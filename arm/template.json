@@ -1,36 +1,23 @@
-To ensure that the Data Factory is found within the specified resource group `rg-2024-ch`, we need to ensure that the Data Factory and its resources are correctly referenced and located in that resource group. 
-
-Here is the updated JSON template with the resource group information added:
-
-```json
 {
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
         "factoryName": {
             "type": "string",
-            "metadata": {
-                "description": "Data Factory name"
-            },
+            "metadata": "Data Factory name",
             "defaultValue": "df-2024-ch"
         },
         "synapse_password": {
             "type": "secureString",
-            "metadata": {
-                "description": "Secure string for 'password' of 'synapse'"
-            }
+            "metadata": "Secure string for 'password' of 'synapse'"
         },
         "linkedService1_connectionString": {
             "type": "secureString",
-            "metadata": {
-                "description": "Secure string for 'connectionString' of 'linkedService1'"
-            }
+            "metadata": "Secure string for 'connectionString' of 'linkedService1'"
         },
         "linkedService2_connectionString": {
             "type": "secureString",
-            "metadata": {
-                "description": "Secure string for 'connectionString' of 'linkedService2'"
-            }
+            "metadata": "Secure string for 'connectionString' of 'linkedService2'"
         },
         "synapse_properties_typeProperties_server": {
             "type": "string",
@@ -54,7 +41,6 @@ Here is the updated JSON template with the resource group information added:
             "name": "[concat(parameters('factoryName'), '/Trigger_ch7')]",
             "type": "Microsoft.DataFactory/factories/triggers",
             "apiVersion": "2018-06-01",
-            "location": "[resourceGroup().location]",
             "properties": {
                 "annotations": [],
                 "runtimeState": "Stopped",
@@ -75,7 +61,6 @@ Here is the updated JSON template with the resource group information added:
             "name": "[concat(parameters('factoryName'), '/Trigger_ust')]",
             "type": "Microsoft.DataFactory/factories/triggers",
             "apiVersion": "2018-06-01",
-            "location": "[resourceGroup().location]",
             "properties": {
                 "annotations": [],
                 "runtimeState": "Started",
@@ -106,7 +91,6 @@ Here is the updated JSON template with the resource group information added:
             "name": "[concat(parameters('factoryName'), '/DestinationDataset_ust')]",
             "type": "Microsoft.DataFactory/factories/datasets",
             "apiVersion": "2018-06-01",
-            "location": "[resourceGroup().location]",
             "properties": {
                 "linkedServiceName": {
                     "referenceName": "synapse",
@@ -128,7 +112,6 @@ Here is the updated JSON template with the resource group information added:
             "name": "[concat(parameters('factoryName'), '/SourceDataset_ust')]",
             "type": "Microsoft.DataFactory/factories/datasets",
             "apiVersion": "2018-06-01",
-            "location": "[resourceGroup().location]",
             "properties": {
                 "linkedServiceName": {
                     "referenceName": "nyc_taxi",
@@ -239,7 +222,6 @@ Here is the updated JSON template with the resource group information added:
             "name": "[concat(parameters('factoryName'), '/taxi_copy')]",
             "type": "Microsoft.DataFactory/factories/pipelines",
             "apiVersion": "2018-06-01",
-            "location": "[resourceGroup().location]",
             "properties": {
                 "activities": [
                     {
@@ -307,4 +289,397 @@ Here is the updated JSON template with the resource group information added:
                                             "type": "Int32",
                                             "physicalType": "INT32"
                                         },
-                                        "
+                                        "sink": {
+                                            "name": "vendorID",
+                                            "type": "Int32",
+                                            "physicalType": "int"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "lpepPickupDatetime",
+                                            "type": "DateTime",
+                                            "physicalType": "INT96"
+                                        },
+                                        "sink": {
+                                            "name": "lpepPickupDatetime",
+                                            "type": "DateTime",
+                                            "physicalType": "datetime2"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "lpepDropoffDatetime",
+                                            "type": "DateTime",
+                                            "physicalType": "INT96"
+                                        },
+                                        "sink": {
+                                            "name": "lpepDropoffDatetime",
+                                            "type": "DateTime",
+                                            "physicalType": "datetime2"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "passengerCount",
+                                            "type": "Int32",
+                                            "physicalType": "INT32"
+                                        },
+                                        "sink": {
+                                            "name": "passengerCount",
+                                            "type": "Int32",
+                                            "physicalType": "int"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "tripDistance",
+                                            "type": "Double",
+                                            "physicalType": "DOUBLE"
+                                        },
+                                        "sink": {
+                                            "name": "tripDistance",
+                                            "type": "Double",
+                                            "physicalType": "float"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "puLocationId",
+                                            "type": "String",
+                                            "physicalType": "UTF8"
+                                        },
+                                        "sink": {
+                                            "name": "puLocationId",
+                                            "type": "String",
+                                            "physicalType": "nvarchar"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "doLocationId",
+                                            "type": "String",
+                                            "physicalType": "UTF8"
+                                        },
+                                        "sink": {
+                                            "name": "doLocationId",
+                                            "type": "String",
+                                            "physicalType": "nvarchar"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "pickupLongitude",
+                                            "type": "Double",
+                                            "physicalType": "DOUBLE"
+                                        },
+                                        "sink": {
+                                            "name": "pickupLongitude",
+                                            "type": "Double",
+                                            "physicalType": "float"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "pickupLatitude",
+                                            "type": "Double",
+                                            "physicalType": "DOUBLE"
+                                        },
+                                        "sink": {
+                                            "name": "pickupLatitude",
+                                            "type": "Double",
+                                            "physicalType": "float"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "dropoffLongitude",
+                                            "type": "Double",
+                                            "physicalType": "DOUBLE"
+                                        },
+                                        "sink": {
+                                            "name": "dropoffLongitude",
+                                            "type": "Double",
+                                            "physicalType": "float"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "dropoffLatitude",
+                                            "type": "Double",
+                                            "physicalType": "DOUBLE"
+                                        },
+                                        "sink": {
+                                            "name": "dropoffLatitude",
+                                            "type": "Double",
+                                            "physicalType": "float"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "rateCodeID",
+                                            "type": "Int32",
+                                            "physicalType": "INT32"
+                                        },
+                                        "sink": {
+                                            "name": "rateCodeID",
+                                            "type": "Int32",
+                                            "physicalType": "int"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "storeAndFwdFlag",
+                                            "type": "String",
+                                            "physicalType": "UTF8"
+                                        },
+                                        "sink": {
+                                            "name": "storeAndFwdFlag",
+                                            "type": "String",
+                                            "physicalType": "nvarchar"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "paymentType",
+                                            "type": "Int32",
+                                            "physicalType": "INT32"
+                                        },
+                                        "sink": {
+                                            "name": "paymentType",
+                                            "type": "Int32",
+                                            "physicalType": "int"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "fareAmount",
+                                            "type": "Double",
+                                            "physicalType": "DOUBLE"
+                                        },
+                                        "sink": {
+                                            "name": "fareAmount",
+                                            "type": "Double",
+                                            "physicalType": "float"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "extra",
+                                            "type": "Double",
+                                            "physicalType": "DOUBLE"
+                                        },
+                                        "sink": {
+                                            "name": "extra",
+                                            "type": "Double",
+                                            "physicalType": "float"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "mtaTax",
+                                            "type": "Double",
+                                            "physicalType": "DOUBLE"
+                                        },
+                                        "sink": {
+                                            "name": "mtaTax",
+                                            "type": "Double",
+                                            "physicalType": "float"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "improvementSurcharge",
+                                            "type": "String",
+                                            "physicalType": "UTF8"
+                                        },
+                                        "sink": {
+                                            "name": "improvementSurcharge",
+                                            "type": "String",
+                                            "physicalType": "nvarchar"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "tipAmount",
+                                            "type": "Double",
+                                            "physicalType": "DOUBLE"
+                                        },
+                                        "sink": {
+                                            "name": "tipAmount",
+                                            "type": "Double",
+                                            "physicalType": "float"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "tollsAmount",
+                                            "type": "Double",
+                                            "physicalType": "DOUBLE"
+                                        },
+                                        "sink": {
+                                            "name": "tollsAmount",
+                                            "type": "Double",
+                                            "physicalType": "float"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "ehailFee",
+                                            "type": "Double",
+                                            "physicalType": "DOUBLE"
+                                        },
+                                        "sink": {
+                                            "name": "ehailFee",
+                                            "type": "Double",
+                                            "physicalType": "float"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "totalAmount",
+                                            "type": "Double",
+                                            "physicalType": "DOUBLE"
+                                        },
+                                        "sink": {
+                                            "name": "totalAmount",
+                                            "type": "Double",
+                                            "physicalType": "float"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "tripType",
+                                            "type": "Int32",
+                                            "physicalType": "INT32"
+                                        },
+                                        "sink": {
+                                            "name": "tripType",
+                                            "type": "Int32",
+                                            "physicalType": "int"
+                                        }
+                                    }
+                                ],
+                                "typeConversion": true,
+                                "typeConversionSettings": {
+                                    "allowDataTruncation": true,
+                                    "treatBooleanAsNumber": false
+                                }
+                            }
+                        },
+                        "inputs": [
+                            {
+                                "referenceName": "SourceDataset_ust",
+                                "type": "DatasetReference",
+                                "parameters": {}
+                            }
+                        ],
+                        "outputs": [
+                            {
+                                "referenceName": "DestinationDataset_ust",
+                                "type": "DatasetReference",
+                                "parameters": {}
+                            }
+                        ]
+                    }
+                ],
+                "policy": {
+                    "elapsedTimeMetric": {}
+                },
+                "annotations": [],
+                "lastPublishTime": "2024-07-21T19:58:12Z"
+            },
+            "dependsOn": [
+                "[concat(variables('factoryId'), '/datasets/SourceDataset_ust')]",
+                "[concat(variables('factoryId'), '/datasets/DestinationDataset_ust')]",
+                "[concat(variables('factoryId'), '/linkedServices/linkedService2')]"
+            ]
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/credential1')]",
+            "type": "Microsoft.DataFactory/factories/credentials",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "type": "ManagedIdentity",
+                "typeProperties": {
+                    "resourceId": "[concat('/subscriptions/796313f9-881f-4bee-bd46-ba6ad10afbb4/resourcegroups/', variables('resourceGroup'), '/providers/Microsoft.ManagedIdentity/userAssignedIdentities/uai-all')]"
+                }
+            },
+            "dependsOn": []
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/credential2')]",
+            "type": "Microsoft.DataFactory/factories/credentials",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "type": "ManagedIdentity",
+                "typeProperties": {
+                    "resourceId": "[concat('/subscriptions/796313f9-881f-4bee-bd46-ba6ad10afbb4/resourcegroups/', variables('resourceGroup'), '/providers/Microsoft.ManagedIdentity/userAssignedIdentities/uai-datafactory')]"
+                }
+            },
+            "dependsOn": []
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/nyc_taxi')]",
+            "type": "Microsoft.DataFactory/factories/linkedServices",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "annotations": [],
+                "type": "AzureBlobStorage",
+                "typeProperties": {
+                    "containerUri": "https://azureopendatastorage.blob.core.windows.net/nyctlc/",
+                    "authenticationType": "Anonymous"
+                }
+            },
+            "dependsOn": []
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/synapse')]",
+            "type": "Microsoft.DataFactory/factories/linkedServices",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "annotations": [],
+                "type": "AzureSqlDW",
+                "typeProperties": {
+                    "server": "[parameters('synapse_properties_typeProperties_server')]",
+                    "database": "[parameters('synapse_properties_typeProperties_database')]",
+                    "encrypt": "mandatory",
+                    "trustServerCertificate": true,
+                    "authenticationType": "SQL",
+                    "userName": "[parameters('synapse_properties_typeProperties_userName')]",
+                    "password": {
+                        "type": "SecureString",
+                        "value": "[parameters('synapse_password')]"
+                    }
+                }
+            },
+            "dependsOn": []
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/linkedService1')]",
+            "type": "Microsoft.DataFactory/factories/linkedServices",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "annotations": [],
+                "type": "AzureBlobStorage",
+                "typeProperties": {
+                    "connectionString": "[parameters('linkedService1_connectionString')]"
+                }
+            },
+            "dependsOn": []
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/linkedService2')]",
+            "type": "Microsoft.DataFactory/factories/linkedServices",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "annotations": [],
+                "type": "AzureBlobStorage",
+                "typeProperties": {
+                    "connectionString": "[parameters('linkedService2_connectionString')]"
+                }
+            },
+            "dependsOn": []
+        }
+    ]
+}
