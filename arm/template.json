@@ -29,6 +29,42 @@
     },
     "resources": [
         {
+            "name": "[concat(parameters('factoryName'), '/OpenDataTaxi')]",
+            "type": "Microsoft.DataFactory/factories/linkedServices",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "annotations": [],
+                "type": "AzureBlobStorage",
+                "typeProperties": {
+                    "containerUri": "https://azureopendatastorage.blob.core.windows.net/nyctlc/",
+                    "authenticationType": "Anonymous"
+                }
+            },
+            "dependsOn": []
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/DFSynapse')]",
+            "type": "Microsoft.DataFactory/factories/linkedServices",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "annotations": [],
+                "type": "AzureSqlDW",
+                "typeProperties": {
+                    "server": "[parameters('DFSynapse_properties_typeProperties_server')]",
+                    "database": "[parameters('DFSynapse_properties_typeProperties_database')]",
+                    "encrypt": "mandatory",
+                    "trustServerCertificate": true,
+                    "authenticationType": "SQL",
+                    "userName": "[parameters('DFSynapse_properties_typeProperties_userName')]",
+                    "password": {
+                        "type": "SecureString",
+                        "value": "[parameters('DFSynapse_password')]"
+                    }
+                }
+            },
+            "dependsOn": []
+        }
+        {
             "name": "[concat(parameters('factoryName'), '/source_taxi_green')]",
             "type": "Microsoft.DataFactory/factories/datasets",
             "apiVersion": "2018-06-01",
@@ -147,19 +183,29 @@
             ]
         },
         {
-            "name": "[concat(parameters('factoryName'), '/OpenDataTaxi')]",
-            "type": "Microsoft.DataFactory/factories/linkedServices",
+            "name": "[concat(parameters('factoryName'), '/destination_taxi_green')]",
+            "type": "Microsoft.DataFactory/factories/datasets",
             "apiVersion": "2018-06-01",
             "properties": {
+                "linkedServiceName": {
+                    "referenceName": "DFSynapse",
+                    "type": "LinkedServiceReference"
+                },
                 "annotations": [],
-                "type": "AzureBlobStorage",
+                "type": "AzureSqlDWTable",
+                "schema": [],
                 "typeProperties": {
-                    "containerUri": "https://azureopendatastorage.blob.core.windows.net/nyctlc/",
-                    "authenticationType": "Anonymous"
+                    "schema": "dbo",
+                    "table": "taxi_green"
                 }
             },
-            "dependsOn": []
+            "dependsOn": [
+                "[concat(variables('factoryId'), '/linkedServices/DFSynapse')]"
+            ]
         },
+
+
+
         {
             "name": "[concat(parameters('factoryName'), '/copy_taxi_green')]",
             "type": "Microsoft.DataFactory/factories/pipelines",
@@ -295,28 +341,6 @@
             "dependsOn": [
                 "[concat(variables('factoryId'), '/pipelines/copy_taxi_green')]"
             ]
-        },
-        {
-            "name": "[concat(parameters('factoryName'), '/DFSynapse')]",
-            "type": "Microsoft.DataFactory/factories/linkedServices",
-            "apiVersion": "2018-06-01",
-            "properties": {
-                "annotations": [],
-                "type": "AzureSqlDW",
-                "typeProperties": {
-                    "server": "[parameters('DFSynapse_properties_typeProperties_server')]",
-                    "database": "[parameters('DFSynapse_properties_typeProperties_database')]",
-                    "encrypt": "mandatory",
-                    "trustServerCertificate": true,
-                    "authenticationType": "SQL",
-                    "userName": "[parameters('DFSynapse_properties_typeProperties_userName')]",
-                    "password": {
-                        "type": "SecureString",
-                        "value": "[parameters('DFSynapse_password')]"
-                    }
-                }
-            },
-            "dependsOn": []
         }
     ]
 }
