@@ -16,19 +16,23 @@ fi
 # Fetch the list of HCP runs
 response=$(curl -s -H "Authorization: Bearer $HCP_API_TOKEN" "$HCP_API_URL/organizations/$HCP_ORG_ID/projects/$HCP_PROJECT_ID/runs")
 
-# Parse the run IDs from the response
-run_ids=$(echo "$response" | jq -r '.runs[].id')
+# Parse the current date and date 7 days ago
+current_date=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+seven_days_ago=$(date -u -d '7 days ago' +"%Y-%m-%dT%H:%M:%SZ")
 
-if [ -z "$run_ids" ]; then
-  echo "No runs found."
+# Parse the run IDs and their creation dates from the response
+run_info=$(echo "$response" | jq -r '.runs[] | select(.created_at < "'$seven_days_ago'") | .id')
+
+if [ -z "$run_info" ]; then
+  echo "No runs older than 7 days found."
   exit 0
 fi
 
 # Loop through each run ID and delete it
-for run_id in $run_ids; do
+for run_id in $run_info; do
   echo "Deleting run $run_id..."
   curl -s -X DELETE -H "Authorization: Bearer $HCP_API_TOKEN" "$HCP_API_URL/organizations/$HCP_ORG_ID/projects/$HCP_PROJECT_ID/runs/$run_id"
   echo "Run $run_id deleted."
 done
 
-echo "All HCP runs have been deleted."
+echo "All HCP runs older than 7 days have been deleted."
