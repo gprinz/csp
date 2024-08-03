@@ -24,12 +24,9 @@
             "defaultValue": "sqladminuser"
         }
     },
-    "variables": {
-        "factoryId": "[concat('/subscriptions/796313f9-881f-4bee-bd46-ba6ad10afbb4/resourcegroups/rg-2024-ch/providers/Microsoft.DataFactory/factories/', parameters('factoryName'))]"
-    },
     "resources": [
         {
-            "name": "[concat(parameters('factoryId'), '/OpenDataTaxi')]",
+            "name": "OpenDataTaxi",
             "type": "Microsoft.DataFactory/factories/linkedServices",
             "apiVersion": "2018-06-01",
             "properties": {
@@ -43,7 +40,7 @@
             "dependsOn": []
         },
         {
-            "name": "[concat(parameters('factoryId'), '/DFSynapse')]",
+            "name": "DFSynapse",
             "type": "Microsoft.DataFactory/factories/linkedServices",
             "apiVersion": "2018-06-01",
             "properties": {
@@ -65,12 +62,12 @@
             "dependsOn": []
         },
         {
-            "name": "[concat(parameters('factoryId'), '/source_taxi_green')]",
+            "name": "source_taxi_green",
             "type": "Microsoft.DataFactory/factories/datasets",
             "apiVersion": "2018-06-01",
             "properties": {
                 "linkedServiceName": {
-                    "referenceName": "[concat(parameters('factoryId'), '/OpenDataTaxi')]",
+                    "referenceName": "OpenDataTaxi",
                     "type": "LinkedServiceReference"
                 },
                 "annotations": [],
@@ -179,11 +176,11 @@
                 ]
             },
             "dependsOn": [
-                "[concat(parameters('factoryId'), '/linkedServices/OpenDataTaxi')]"
+                "[resourceId('Microsoft.DataFactory/factories/linkedServices, 'OpenDataTaxi')]"
             ]
         },
         {
-            "name": "[concat(parameters('factoryId'), '/destination_taxi_green')]",
+            "name": "destination_taxi_green",
             "type": "Microsoft.DataFactory/factories/datasets",
             "apiVersion": "2018-06-01",
             "properties": {
@@ -205,7 +202,7 @@
 
 
         {
-            "name": "[concat(parameters('factoryId'), '/copy_taxi_green')]",
+            "name": "copy_taxi_green",
             "type": "Microsoft.DataFactory/factories/pipelines",
             "apiVersion": "2018-06-01",
             "properties": {
@@ -285,12 +282,12 @@
                 "lastPublishTime": "2024-08-03T13:36:52Z"
             },
             "dependsOn": [
-                "[concat(variables('factoryId'), '/datasets/source_taxi_green')]",
-                "[concat(variables('factoryId'), '/datasets/destination_taxi_green')]"
+                "['Microsoft.DataFactory/factories/datasets', 'source_taxi_green')]",
+                "['Microsoft.DataFactory/factories/datasets', 'destination_taxi_green')]"
             ]
         },
         {
-            "name": "[concat(parameters('factoryId'), '/trigger_weekly')]",
+            "name": "trigger_weekly",
             "type": "Microsoft.DataFactory/factories/triggers",
             "apiVersion": "2018-06-01",
             "properties": {
@@ -316,7 +313,7 @@
                 }
             },
             "dependsOn": [
-                "[concat(variables('factoryId'), '/pipelines/copy_taxi_green')]"
+                "[resourceId('Microsoft.DataFactory/factories/pipelines', 'copy_taxi_green')]"
             ]
         }
     ]
