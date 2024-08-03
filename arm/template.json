@@ -310,7 +310,7 @@
                 }
             },
             "dependsOn": [
-                "[resourceId('Microsoft.DataFactory/factories/pipelines', , parameters('factoryName'), 'copy_taxi_green')]"
+                "[resourceId('Microsoft.DataFactory/factories/pipelines', parameters('factoryName'), 'copy_taxi_green')]"
             ]
         }
     ]
