@@ -33,7 +33,7 @@
         }
     },
     "variables": {
-        "factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+        "factoryId": "[concat('/subscriptions/796313f9-881f-4bee-bd46-ba6ad10afbb4/resourcegroups/rg-2024-ch/providers/Microsoft.DataFactory/factories/', parameters('factoryName'))]"
     },
     "resources": [
         {
