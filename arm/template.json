@@ -179,7 +179,7 @@
                 ]
             },
             "dependsOn": [
-                "[concat(variables('factoryId'), '/linkedServices/OpenDataTaxi')]"
+                "[concat(parameters('factoryName'), '/linkedServices/OpenDataTaxi')]"
             ]
         },
         {
