@@ -25,7 +25,7 @@
         },
         "triggerStartTime": {
             "type": "string",
-            "defaultValue": "[formatDateTime(utcNow(), 'yyyy-MM-ddTHH:mm:ssZ')]",
+            "defaultValue": "2024-01-01T00:00:00Z",
             "metadata": "Trigger start time in ISO 8601 format"
         }
     },
