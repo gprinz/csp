@@ -16,16 +16,16 @@
             "defaultValue": "sasynapse2024ch"
         },
         "DFSynapse_password": {
-            "type": "string",
+            "type": "string"
         },
         "DFSynapse_properties_typeProperties_server": {
-            "type": "string",
+            "type": "string"
         },
         "DFSynapse_properties_typeProperties_database": {
-            "type": "string",
+            "type": "string"
         },
         "DFSynapse_properties_typeProperties_userName": {
-            "type": "string",
+            "type": "string"
         }
     },
     "resources": [
