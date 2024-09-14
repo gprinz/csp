@@ -60,6 +60,7 @@ resource "azurerm_synapse_workspace" "example" {
   resource_group_name                  = azurerm_resource_group.rg_synapse.name
   location                             = azurerm_resource_group.rg_synapse.location
   storage_data_lake_gen2_filesystem_id = azurerm_storage_data_lake_gen2_filesystem.file.id
+  sql_administrator_login              = null
 
   customer_managed_key {
     key_versionless_id = azurerm_key_vault_key.example.versionless_id

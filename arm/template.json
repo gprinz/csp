@@ -7,21 +7,13 @@
             "metadata": "Data Factory name",
             "defaultValue": "df-2024-ch"
         },
-        "DFSynapse_password": {
-            "type": "secureString",
-            "metadata": "Secure string for 'password' of 'DFSynapse'"
-        },
-        "DFSynapse_properties_typeProperties_server": {
+        "destinationContainerName": {
             "type": "string",
-            "defaultValue": "synapse6336.sql.azuresynapse.net"
+            "defaultValue": "example"
         },
-        "DFSynapse_properties_typeProperties_database": {
+        "destinationStorageAccountName": {
             "type": "string",
-            "defaultValue": "dwh"
-        },
-        "DFSynapse_properties_typeProperties_userName": {
-            "type": "string",
-            "defaultValue": "sqladminuser"
+            "defaultValue": "sasynapse2024ch"
         }
     },
     "resources": [
