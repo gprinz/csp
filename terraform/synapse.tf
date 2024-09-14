@@ -90,6 +90,8 @@ resource "azurerm_synapse_workspace_key" "example" {
   synapse_workspace_id                = azurerm_synapse_workspace.example.id
   active                              = true
   customer_managed_key_name           = "enckey"
+
+  depends_on = [azurerm_key_vault_access_policy.workspace_policy]
 }
 
 resource "azurerm_synapse_workspace_aad_admin" "example" {
