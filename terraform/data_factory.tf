@@ -1,5 +1,5 @@
 resource "azurerm_data_factory" "adf" {
-  name                = "adf-${local.current_year}"
+  name                = "adf-2025"
   resource_group_name = azurerm_resource_group.rg_synapse.name
   location            = azurerm_resource_group.rg_synapse.location
 
