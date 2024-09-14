@@ -22,6 +22,11 @@
         "DFSynapse_properties_typeProperties_userName": {
             "type": "string",
             "defaultValue": "sqladminuser"
+        },
+        "triggerStartTime": {
+            "type": "string",
+            "defaultValue": "2024-01-01T00:00:00Z",
+            "metadata": "Trigger start time in ISO 8601 format"
         }
     },
     "resources": [
@@ -62,7 +67,7 @@
             "dependsOn": []
         },
         {
-            "name": "[concat(parameters('factoryName'), '/source_taxi_green')]",
+            "name": "[concat(parameters('factoryName'), '/source_taxi_yellow')]",
             "type": "Microsoft.DataFactory/factories/datasets",
             "apiVersion": "2018-06-01",
             "properties": {
@@ -75,103 +80,103 @@
                 "typeProperties": {
                     "location": {
                         "type": "AzureBlobStorageLocation",
-                        "folderPath": "green",
+                        "folderPath": "yellow",
                         "container": "nyctlc"
                     },
                     "compressionCodec": "snappy"
                 },
                 "schema": [
                     {
-                        "name": "vendorID",
-                        "type": "INT32"
-                    },
-                    {
-                        "name": "lpepPickupDatetime",
-                        "type": "INT96"
-                    },
-                    {
-                        "name": "lpepDropoffDatetime",
-                        "type": "INT96"
-                    },
-                    {
-                        "name": "passengerCount",
-                        "type": "INT32"
-                    },
-                    {
-                        "name": "tripDistance",
-                        "type": "DOUBLE"
-                    },
-                    {
-                        "name": "puLocationId",
-                        "type": "UTF8"
-                    },
-                    {
                         "name": "doLocationId",
-                        "type": "UTF8"
+                        "type": "String"
                     },
                     {
-                        "name": "pickupLongitude",
-                        "type": "DOUBLE"
+                        "name": "endLat",
+                        "type": "Double"
                     },
                     {
-                        "name": "pickupLatitude",
-                        "type": "DOUBLE"
-                    },
-                    {
-                        "name": "dropoffLongitude",
-                        "type": "DOUBLE"
-                    },
-                    {
-                        "name": "dropoffLatitude",
-                        "type": "DOUBLE"
-                    },
-                    {
-                        "name": "rateCodeID",
-                        "type": "INT32"
-                    },
-                    {
-                        "name": "storeAndFwdFlag",
-                        "type": "UTF8"
-                    },
-                    {
-                        "name": "paymentType",
-                        "type": "INT32"
-                    },
-                    {
-                        "name": "fareAmount",
-                        "type": "DOUBLE"
+                        "name": "endLon",
+                        "type": "Double"
                     },
                     {
                         "name": "extra",
-                        "type": "DOUBLE"
+                        "type": "Double"
                     },
                     {
-                        "name": "mtaTax",
-                        "type": "DOUBLE"
+                        "name": "fareAmount",
+                        "type": "Double"
                     },
                     {
                         "name": "improvementSurcharge",
-                        "type": "UTF8"
+                        "type": "String"
+                    },
+                    {
+                        "name": "mtaTax",
+                        "type": "Double"
+                    },
+                    {
+                        "name": "passengerCount",
+                        "type": "Int32"
+                    },
+                    {
+                        "name": "paymentType",
+                        "type": "String"
+                    },
+                    {
+                        "name": "puLocationId",
+                        "type": "String"
+                    },
+                    {
+                        "name": "puMonth",
+                        "type": "Int32"
+                    },
+                    {
+                        "name": "puYear",
+                        "type": "Int32"
+                    },
+                    {
+                        "name": "rateCodeId",
+                        "type": "Int32"
+                    },
+                    {
+                        "name": "startLat",
+                        "type": "Double"
+                    },
+                    {
+                        "name": "startLon",
+                        "type": "Double"
+                    },
+                    {
+                        "name": "storeAndFwdFlag",
+                        "type": "String"
                     },
                     {
                         "name": "tipAmount",
-                        "type": "DOUBLE"
+                        "type": "Double"
                     },
                     {
                         "name": "tollsAmount",
-                        "type": "DOUBLE"
-                    },
-                    {
-                        "name": "ehailFee",
-                        "type": "DOUBLE"
+                        "type": "Double"
                     },
                     {
                         "name": "totalAmount",
-                        "type": "DOUBLE"
+                        "type": "Double"
                     },
                     {
-                        "name": "tripType",
-                        "type": "INT32"
+                        "name": "tpepDropoffDateTime",
+                        "type": "Timestamp"
+                    },
+                    {
+                        "name": "tpepPickupDateTime",
+                        "type": "Timestamp"
+                    },
+                    {
+                        "name": "tripDistance",
+                        "type": "Double"
+                    },
+                    {
+                        "name": "vendorID",
+                        "type": "String"
                     }
                 ]
             },
@@ -180,7 +185,7 @@
             ]
         },
         {
-            "name": "[concat(parameters('factoryName'), '/destination_taxi_green')]",
+            "name": "[concat(parameters('factoryName'), '/destination_taxi_yellow')]",
             "type": "Microsoft.DataFactory/factories/datasets",
             "apiVersion": "2018-06-01",
             "properties": {
@@ -193,126 +198,11 @@
                 "schema": [],
                 "typeProperties": {
                     "schema": "dbo",
-                    "table": "taxi_green"
+                    "table": "taxi_yellow"
                 }
             },
             "dependsOn": [
                 "[resourceId('Microsoft.DataFactory/factories/linkedServices', parameters('factoryName'), 'DFSynapse')]"
-            ]
-        },
-        {
-            "name": "[concat(parameters('factoryName'), '/copy_taxi_green')]",
-            "type": "Microsoft.DataFactory/factories/pipelines",
-            "apiVersion": "2018-06-01",
-            "properties": {
-                "activities": [
-                    {
-                        "name": "copy_taxi_green",
-                        "type": "Copy",
-                        "dependsOn": [],
-                        "policy": {
-                            "timeout": "0.12:00:00",
-                            "retry": 0,
-                            "retryIntervalInSeconds": 30,
-                            "secureOutput": false,
-                            "secureInput": false
-                        },
-                        "userProperties": [
-                            {
-                                "name": "Source",
-                                "value": "nyctlc/green/"
-                            },
-                            {
-                                "name": "Destination",
-                                "value": "dbo.taxi_green"
-                            }
-                        ],
-                        "typeProperties": {
-                            "source": {
-                                "type": "ParquetSource",
-                                "storeSettings": {
-                                    "type": "AzureBlobStorageReadSettings",
-                                    "recursive": true,
-                                    "wildcardFolderPath": "green",
-                                    "wildcardFileName": "*.parquet",
-                                    "enablePartitionDiscovery": false
-                                },
-                                "formatSettings": {
-                                    "type": "ParquetReadSettings"
-                                }
-                            },
-                            "sink": {
-                                "type": "SqlDWSink",
-                                "writeBehavior": "Insert",
-                                "tableOption": "autoCreate"
-                            },
-                            "enableStaging": false,
-                            "enableSkipIncompatibleRow": true,
-                            "validateDataConsistency": false,
-                            "translator": {
-                                "type": "TabularTranslator",
-                                "typeConversion": true,
-                                "typeConversionSettings": {
-                                    "allowDataTruncation": true,
-                                    "treatBooleanAsNumber": false
-                                }
-                            }
-                        },
-                        "inputs": [
-                            {
-                                "referenceName": "source_taxi_green",
-                                "type": "DatasetReference",
-                                "parameters": {}
-                            }
-                        ],
-                        "outputs": [
-                            {
-                                "referenceName": "destination_taxi_green",
-                                "type": "DatasetReference",
-                                "parameters": {}
-                            }
-                        ]
-                    }
-                ],
-                "policy": {
-                    "elapsedTimeMetric": {}
-                },
-                "annotations": [],
-                "lastPublishTime": "2024-08-03T13:36:52Z"
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.DataFactory/factories/datasets', parameters('factoryName'), 'source_taxi_green')]",
-                "[resourceId('Microsoft.DataFactory/factories/datasets', parameters('factoryName'), 'destination_taxi_green')]"
-            ]
-        },
-        {
-            "name": "[concat(parameters('factoryName'), '/trigger_daily_gt')]",
-            "type": "Microsoft.DataFactory/factories/triggers",
-            "apiVersion": "2018-06-01",
-            "properties": {
-                "annotations": [],
-                "runtimeState": "Started",
-                "pipelines": [
-                    {
-                        "pipelineReference": {
-                            "referenceName": "copy_taxi_green",
-                            "type": "PipelineReference"
-                        },
-                        "parameters": {}
-                    }
-                ],
-                "type": "ScheduleTrigger",
-                "typeProperties": {
-                    "recurrence": {
-                        "frequency": "Hour",
-                        "interval": 24,
-                        "startTime": "2024-01-01T00:00:00Z",
-                        "timeZone": "UTC"
-                    }
-                }
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.DataFactory/factories/pipelines', parameters('factoryName'), 'copy_taxi_green')]"
             ]
         }
     ]
