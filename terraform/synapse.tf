@@ -1,76 +1,7 @@
-# Resource Group for production
-resource "azurerm_resource_group" "rg_synapse" {
-  name     = "rgsyn${local.current_year}ch6"
-  location = "West Europe"
-}
-
-# Storage account configuration
-resource "azurerm_storage_account" "synapse" {
-  name                     = "sasynapse${local.current_year}ch"
-  location                 = azurerm_resource_group.rg_synapse.location
-  resource_group_name      = azurerm_resource_group.rg_synapse.name
-  account_tier             = "Standard"
-  account_replication_type = "LRS"
-  account_kind             = "StorageV2"
-  is_hns_enabled           = "true"
-}
-
-resource "azurerm_storage_data_lake_gen2_filesystem" "fs" {
-  name               = "taxi"
-  storage_account_id = azurerm_storage_account.synapse.id
-}
-
-variable "directories" {
-  type    = list(string)
-  default = ["green", "yellow", "fhv"]
-}
-
-resource "azurerm_storage_data_lake_gen2_path" "directories" {
-  for_each           = toset(var.directories)
-  filesystem_name    = azurerm_storage_data_lake_gen2_filesystem.fs.name
-  storage_account_id = azurerm_storage_account.synapse.id
-  path               = each.value
-  resource           = "directory"
-}
-
-# Key Vault configuration
-resource "azurerm_key_vault" "kv2" {
-  name                     = "kv-${local.current_year}-ch1000"
-  location                 = azurerm_resource_group.ml_rg.location
-  resource_group_name      = azurerm_resource_group.ml_rg.name
-  tenant_id                = data.azurerm_client_config.current.tenant_id
-  sku_name                 = "premium"
-  purge_protection_enabled = true
-}
-
-resource "azurerm_key_vault_access_policy" "deployer" {
-  key_vault_id = azurerm_key_vault.kv2.id
-  tenant_id    = data.azurerm_client_config.current.tenant_id
-  object_id    = data.azurerm_client_config.current.object_id
-
-  key_permissions = [
-    "Create", "Get", "Delete", "Purge", "GetRotationPolicy"
-  ]
-}
-
-resource "azurerm_key_vault_key" "example" {
-  name         = "workspaceencryptionkey"
-  key_vault_id = azurerm_key_vault.kv2.id
-  key_type     = "RSA"
-  key_size     = 2048
-  key_opts = [
-    "unwrapKey",
-    "wrapKey"
-  ]
-  depends_on = [
-    azurerm_key_vault_access_policy.deployer
-  ]
-}
-
 resource "azurerm_synapse_workspace" "example" {
   name                                 = "synapse6335"
-  resource_group_name                  = azurerm_resource_group.rg_synapse.name
-  location                             = azurerm_resource_group.rg_synapse.location
+  resource_group_name                  = azurerm_resource_group.ml_rg.name
+  location                             = azurerm_resource_group.ml_rg.location
   storage_data_lake_gen2_filesystem_id = azurerm_storage_data_lake_gen2_filesystem.fs.id
   sql_administrator_login              = "sqladminuser"
 

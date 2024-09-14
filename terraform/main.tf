@@ -58,7 +58,7 @@ resource "azurerm_application_insights" "ai" {
 
 # Key Vault configuration
 resource "azurerm_key_vault" "kv" {
-  name                     = "kv-${local.current_year}-ch1100"
+  name                     = "kv-${local.current_year}-ch1200"
   location                 = azurerm_resource_group.ml_rg.location
   resource_group_name      = azurerm_resource_group.ml_rg.name
   tenant_id                = data.azurerm_client_config.current.tenant_id
@@ -73,16 +73,62 @@ resource "azurerm_storage_account" "ml" {
   resource_group_name      = azurerm_resource_group.ml_rg.name
   account_tier             = "Standard"
   account_replication_type = "LRS"
+  account_kind             = "StorageV2"
+  is_hns_enabled           = "true"
 }
 
-# Storage account configuration
-resource "azurerm_storage_account" "raw_data" {
-  name                     = "data${local.current_year}ch"
-  location                 = azurerm_resource_group.rg_prod.location
-  resource_group_name      = azurerm_resource_group.rg_prod.name
-  account_tier             = "Standard"
-  account_replication_type = "LRS"
+resource "azurerm_storage_data_lake_gen2_filesystem" "fs" {
+  name               = "taxi"
+  storage_account_id = azurerm_storage_account.ml.id
 }
+
+variable "directories" {
+  type    = list(string)
+  default = ["green", "yellow", "fhv"]
+}
+
+resource "azurerm_storage_data_lake_gen2_path" "directories" {
+  for_each           = toset(var.directories)
+  filesystem_name    = azurerm_storage_data_lake_gen2_filesystem.fs.name
+  storage_account_id = azurerm_storage_account.ml.id
+  path               = each.value
+  resource           = "directory"
+}
+
+# Key Vault configuration
+resource "azurerm_key_vault" "kv2" {
+  name                     = "kv-${local.current_year}-ch1300"
+  location                 = azurerm_resource_group.ml_rg.location
+  resource_group_name      = azurerm_resource_group.ml_rg.name
+  tenant_id                = data.azurerm_client_config.current.tenant_id
+  sku_name                 = "premium"
+  purge_protection_enabled = true
+}
+
+resource "azurerm_key_vault_access_policy" "deployer" {
+  key_vault_id = azurerm_key_vault.kv2.id
+  tenant_id    = data.azurerm_client_config.current.tenant_id
+  object_id    = data.azurerm_client_config.current.object_id
+
+  key_permissions = [
+    "Create", "Get", "Delete", "Purge", "GetRotationPolicy"
+  ]
+}
+
+resource "azurerm_key_vault_key" "example" {
+  name         = "workspaceencryptionkey"
+  key_vault_id = azurerm_key_vault.kv2.id
+  key_type     = "RSA"
+  key_size     = 2048
+  key_opts = [
+    "unwrapKey",
+    "wrapKey"
+  ]
+  depends_on = [
+    azurerm_key_vault_access_policy.deployer
+  ]
+}
+
 
 # Key Vault access policy
 resource "azurerm_key_vault_access_policy" "kv_access" {
