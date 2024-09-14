@@ -1,10 +1,16 @@
 name: Terraform Deployment
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   deploy-terraform:
-    name: 'Terraform Deployment'
+    name: "Terraform Deployment"
     runs-on: ubuntu-latest
     environment: production
 
