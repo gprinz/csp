@@ -105,7 +105,7 @@ resource "azurerm_synapse_workspace_aad_admin" "example" {
 }
 
 resource "azurerm_role_assignment" "synapse_blob_reader" {
-  scope                = azurerm_storage_account.synapse.id
-  role_definition_name = "Storage Blob Data Contributor"
+  scope                = data.azurerm_subscription.primary.id
+  role_definition_name = "Contributor"
   principal_id         = azurerm_synapse_workspace.example.identity[0].principal_id
 }

@@ -146,6 +146,12 @@ resource "azurerm_machine_learning_workspace" "fstore" {
   }
 }
 
+resource "azurerm_role_assignment" "a1" {
+  principal_id         = azurerm_machine_learning_workspace.fstore.identity[0].principal_id
+  role_definition_name = "Contributor"
+  scope                = data.azurerm_subscription.primary.id
+}
+
 resource "azurerm_machine_learning_workspace" "ml_workspace" {
   name                    = "workspace-${local.current_year}-ch"
   location                = azurerm_resource_group.ml_rg.location
@@ -163,4 +169,10 @@ resource "azurerm_machine_learning_workspace" "ml_workspace" {
     key_vault_id = azurerm_key_vault.kv.id
     key_id       = azurerm_key_vault_key.kv_key.id
   }
+}
+
+resource "azurerm_role_assignment" "a2" {
+  principal_id         = azurerm_machine_learning_workspace.ml_workspace.identity[0].principal_id
+  role_definition_name = "Contributor"
+  scope                = data.azurerm_subscription.primary.id
 }
