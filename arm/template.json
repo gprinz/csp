@@ -195,8 +195,10 @@
                     "schema": "dbo",
                     "table": "taxi_green"
                 }
-            }
-
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.DataFactory/factories/linkedServices', parameters('factoryName'), 'DFSynapse')]"
+            ]
         },
         {
             "name": "[concat(parameters('factoryName'), '/copy_taxi_green')]",
