@@ -7,30 +7,21 @@
             "metadata": "Data Factory name",
             "defaultValue": "df-2024-ch"
         },
-        "destinationStorageAccountName": {
-            "type": "string",
-            "defaultValue": "sasynapse2024ch"
-        },
-        "destinationContainerName": {
-            "type": "string",
-            "defaultValue": "example"
-        },
-        "triggerStartTime": {
-            "type": "string",
-            "defaultValue": "2024-01-01T00:00:00Z",
-            "metadata": "Trigger start time in ISO 8601 format"
-        },
         "DFSynapse_password": {
-            "type": "securestring"
+            "type": "secureString",
+            "metadata": "Secure string for 'password' of 'DFSynapse'"
         },
         "DFSynapse_properties_typeProperties_server": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "synapse6336.sql.azuresynapse.net"
         },
         "DFSynapse_properties_typeProperties_database": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "dwh"
         },
         "DFSynapse_properties_typeProperties_userName": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "sqladminuser"
         }
     },
     "resources": [
@@ -42,7 +33,7 @@
                 "annotations": [],
                 "type": "AzureBlobStorage",
                 "typeProperties": {
-                    "connectionString": "DefaultEndpointsProtocol=https;AccountName=azureopendatastorage;EndpointSuffix=core.windows.net",
+                    "containerUri": "https://azureopendatastorage.blob.core.windows.net/nyctlc/",
                     "authenticationType": "Anonymous"
                 }
             },
