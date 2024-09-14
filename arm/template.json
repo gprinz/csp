@@ -29,7 +29,8 @@
         },
         "triggerStartTime": {
             "type": "string",
-            "defaultValue": "2024-09-00T00:00:00Z"
+            "defaultValue": "2024-01-01T00:00:00Z",
+            "metadata": "Trigger start time in ISO 8601 format"
         }
     },
     "resources": [
