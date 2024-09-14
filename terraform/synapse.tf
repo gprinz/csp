@@ -21,8 +21,18 @@ resource "azurerm_storage_data_lake_gen2_filesystem" "file" {
   storage_account_id = azurerm_storage_account.synapse.id
 }
 
+# Key Vault configuration
+resource "azurerm_key_vault" "kv2" {
+  name                     = "kv-${local.current_year}-ch300"
+  location                 = azurerm_resource_group.ml_rg.location
+  resource_group_name      = azurerm_resource_group.ml_rg.name
+  tenant_id                = data.azurerm_client_config.current.tenant_id
+  sku_name                 = "premium"
+  purge_protection_enabled = true
+}
+
 resource "azurerm_key_vault_access_policy" "deployer" {
-  key_vault_id = azurerm_key_vault.kv.id
+  key_vault_id = azurerm_key_vault.kv2.id
   tenant_id    = data.azurerm_client_config.current.tenant_id
   object_id    = data.azurerm_client_config.current.object_id
 
@@ -33,7 +43,7 @@ resource "azurerm_key_vault_access_policy" "deployer" {
 
 resource "azurerm_key_vault_key" "example" {
   name         = "workspaceencryptionkey"
-  key_vault_id = azurerm_key_vault.kv.id
+  key_vault_id = azurerm_key_vault.kv2.id
   key_type     = "RSA"
   key_size     = 2048
   key_opts = [
@@ -66,7 +76,7 @@ resource "azurerm_synapse_workspace" "example" {
 }
 
 resource "azurerm_key_vault_access_policy" "workspace_policy" {
-  key_vault_id = azurerm_key_vault.kv.id
+  key_vault_id = azurerm_key_vault.kv2.id
   tenant_id    = azurerm_synapse_workspace.example.identity[0].tenant_id
   object_id    = azurerm_synapse_workspace.example.identity[0].principal_id
 

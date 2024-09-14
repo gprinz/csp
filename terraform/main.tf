@@ -95,7 +95,7 @@ resource "azurerm_key_vault_access_policy" "kv_access" {
     "Delete",
     "Purge",
     "GetRotationPolicy",
-    "Recover",
+    "Recover"
   ]
 }
 
