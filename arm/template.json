@@ -7,21 +7,13 @@
             "metadata": "Data Factory name",
             "defaultValue": "df-2024-ch"
         },
-        "DFSynapse_password": {
-            "type": "secureString",
-            "metadata": "Secure string for 'password' of 'DFSynapse'"
-        },
-        "DFSynapse_properties_typeProperties_server": {
+        "destinationStorageAccountName": {
             "type": "string",
-            "defaultValue": "synapse6335.sql.azuresynapse.net"
+            "defaultValue": "sasynapse2024ch"
         },
-        "DFSynapse_properties_typeProperties_database": {
+        "destinationContainerName": {
             "type": "string",
-            "defaultValue": "dwh"
-        },
-        "DFSynapse_properties_typeProperties_userName": {
-            "type": "string",
-            "defaultValue": "sqladminuser"
+            "defaultValue": "example"
         },
         "triggerStartTime": {
             "type": "string",
@@ -38,30 +30,21 @@
                 "annotations": [],
                 "type": "AzureBlobStorage",
                 "typeProperties": {
-                    "containerUri": "https://azureopendatastorage.blob.core.windows.net/nyctlc/",
+                    "connectionString": "DefaultEndpointsProtocol=https;AccountName=azureopendatastorage;EndpointSuffix=core.windows.net",
                     "authenticationType": "Anonymous"
                 }
             },
             "dependsOn": []
         },
         {
-            "name": "[concat(parameters('factoryName'), '/DFSynapse')]",
+            "name": "[concat(parameters('factoryName'), '/DestinationDataLakeStorage')]",
             "type": "Microsoft.DataFactory/factories/linkedServices",
             "apiVersion": "2018-06-01",
             "properties": {
-                "annotations": [],
-                "type": "AzureSqlDW",
+                "type": "AzureBlobStorage",
                 "typeProperties": {
-                    "server": "[parameters('DFSynapse_properties_typeProperties_server')]",
-                    "database": "[parameters('DFSynapse_properties_typeProperties_database')]",
-                    "encrypt": "mandatory",
-                    "trustServerCertificate": true,
-                    "authenticationType": "SQL",
-                    "userName": "[parameters('DFSynapse_properties_typeProperties_userName')]",
-                    "password": {
-                        "type": "SecureString",
-                        "value": "[parameters('DFSynapse_password')]"
-                    }
+                    "accountName": "[parameters('destinationStorageAccountName')]",
+                    "authenticationType": "ManagedIdentity"
                 }
             },
             "dependsOn": []
@@ -366,19 +349,22 @@
             "apiVersion": "2018-06-01",
             "properties": {
                 "linkedServiceName": {
-                    "referenceName": "DFSynapse",
+                    "referenceName": "DestinationDataLakeStorage",
                     "type": "LinkedServiceReference"
                 },
                 "annotations": [],
-                "type": "AzureSqlDWTable",
+                "type": "Parquet",
                 "schema": [],
                 "typeProperties": {
-                    "schema": "dbo",
-                    "table": "taxi_green"
+                    "location": {
+                        "type": "AzureBlobStorageLocation",
+                        "container": "[parameters('destinationContainerName')]",
+                        "folderPath": "taxi_green"
+                    }
                 }
             },
             "dependsOn": [
-                "[resourceId('Microsoft.DataFactory/factories/linkedServices', parameters('factoryName'), 'DFSynapse')]"
+                "[resourceId('Microsoft.DataFactory/factories/linkedServices', parameters('factoryName'), 'DestinationDataLakeStorage')]"
             ]
         },
         {
@@ -387,19 +373,22 @@
             "apiVersion": "2018-06-01",
             "properties": {
                 "linkedServiceName": {
-                    "referenceName": "DFSynapse",
+                    "referenceName": "DestinationDataLakeStorage",
                     "type": "LinkedServiceReference"
                 },
                 "annotations": [],
-                "type": "AzureSqlDWTable",
+                "type": "Parquet",
                 "schema": [],
                 "typeProperties": {
-                    "schema": "dbo",
-                    "table": "taxi_yellow"
+                    "location": {
+                        "type": "AzureBlobStorageLocation",
+                        "container": "[parameters('destinationContainerName')]",
+                        "folderPath": "taxi_yellow"
+                    }
                 }
             },
             "dependsOn": [
-                "[resourceId('Microsoft.DataFactory/factories/linkedServices', parameters('factoryName'), 'DFSynapse')]"
+                "[resourceId('Microsoft.DataFactory/factories/linkedServices', parameters('factoryName'), 'DestinationDataLakeStorage')]"
             ]
         },
         {
@@ -408,19 +397,22 @@
             "apiVersion": "2018-06-01",
             "properties": {
                 "linkedServiceName": {
-                    "referenceName": "DFSynapse",
+                    "referenceName": "DestinationDataLakeStorage",
                     "type": "LinkedServiceReference"
                 },
                 "annotations": [],
-                "type": "AzureSqlDWTable",
+                "type": "Parquet",
                 "schema": [],
                 "typeProperties": {
-                    "schema": "dbo",
-                    "table": "taxi_fhv"
+                    "location": {
+                        "type": "AzureBlobStorageLocation",
+                        "container": "[parameters('destinationContainerName')]",
+                        "folderPath": "taxi_fhv"
+                    }
                 }
             },
             "dependsOn": [
-                "[resourceId('Microsoft.DataFactory/factories/linkedServices', parameters('factoryName'), 'DFSynapse')]"
+                "[resourceId('Microsoft.DataFactory/factories/linkedServices', parameters('factoryName'), 'DestinationDataLakeStorage')]"
             ]
         },
         {
@@ -447,7 +439,7 @@
                             },
                             {
                                 "name": "Destination",
-                                "value": "dbo.taxi_green"
+                                "value": "[concat(parameters('destinationContainerName'), '/taxi_green')]"
                             }
                         ],
                         "typeProperties": {
@@ -465,21 +457,18 @@
                                 }
                             },
                             "sink": {
-                                "type": "SqlDWSink",
-                                "writeBehavior": "Insert",
-                                "tableOption": "autoCreate"
+                                "type": "ParquetSink",
+                                "storeSettings": {
+                                    "type": "AzureBlobStorageWriteSettings",
+                                    "blobWriterAddHeader": true
+                                },
+                                "formatSettings": {
+                                    "type": "ParquetWriteSettings"
+                                }
                             },
                             "enableStaging": false,
                             "enableSkipIncompatibleRow": true,
-                            "validateDataConsistency": false,
-                            "translator": {
-                                "type": "TabularTranslator",
-                                "typeConversion": true,
-                                "typeConversionSettings": {
-                                    "allowDataTruncation": true,
-                                    "treatBooleanAsNumber": false
-                                }
-                            }
+                            "validateDataConsistency": false
                         },
                         "inputs": [
                             {
@@ -527,7 +516,7 @@
                             },
                             {
                                 "name": "Destination",
-                                "value": "dbo.taxi_yellow"
+                                "value": "[concat(parameters('destinationContainerName'), '/taxi_yellow')]"
                             }
                         ],
                         "typeProperties": {
@@ -545,21 +534,18 @@
                                 }
                             },
                             "sink": {
-                                "type": "SqlDWSink",
-                                "writeBehavior": "Insert",
-                                "tableOption": "autoCreate"
+                                "type": "ParquetSink",
+                                "storeSettings": {
+                                    "type": "AzureBlobStorageWriteSettings",
+                                    "blobWriterAddHeader": true
+                                },
+                                "formatSettings": {
+                                    "type": "ParquetWriteSettings"
+                                }
                             },
                             "enableStaging": false,
                             "enableSkipIncompatibleRow": true,
-                            "validateDataConsistency": false,
-                            "translator": {
-                                "type": "TabularTranslator",
-                                "typeConversion": true,
-                                "typeConversionSettings": {
-                                    "allowDataTruncation": true,
-                                    "treatBooleanAsNumber": false
-                                }
-                            }
+                            "validateDataConsistency": false
                         },
                         "inputs": [
                             {
@@ -607,7 +593,7 @@
                             },
                             {
                                 "name": "Destination",
-                                "value": "dbo.taxi_fhv"
+                                "value": "[concat(parameters('destinationContainerName'), '/taxi_fhv')]"
                             }
                         ],
                         "typeProperties": {
@@ -625,21 +611,18 @@
                                 }
                             },
                             "sink": {
-                                "type": "SqlDWSink",
-                                "writeBehavior": "Insert",
-                                "tableOption": "autoCreate"
+                                "type": "ParquetSink",
+                                "storeSettings": {
+                                    "type": "AzureBlobStorageWriteSettings",
+                                    "blobWriterAddHeader": true
+                                },
+                                "formatSettings": {
+                                    "type": "ParquetWriteSettings"
+                                }
                             },
                             "enableStaging": false,
                             "enableSkipIncompatibleRow": true,
-                            "validateDataConsistency": false,
-                            "translator": {
-                                "type": "TabularTranslator",
-                                "typeConversion": true,
-                                "typeConversionSettings": {
-                                    "allowDataTruncation": true,
-                                    "treatBooleanAsNumber": false
-                                }
-                            }
+                            "validateDataConsistency": false
                         },
                         "inputs": [
                             {
