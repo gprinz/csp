@@ -26,6 +26,10 @@
         },
         "DFSynapse_properties_typeProperties_userName": {
             "type": "string"
+        },
+        "triggerStartTime": {
+            "type": "string",
+            "defaultValue": "2024-09-00T00:00:00Z"
         }
     },
     "resources": [
