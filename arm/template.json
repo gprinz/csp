@@ -67,6 +67,124 @@
             "dependsOn": []
         },
         {
+            "name": "[concat(parameters('factoryName'), '/source_taxi_green')]",
+            "type": "Microsoft.DataFactory/factories/datasets",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "linkedServiceName": {
+                    "referenceName": "OpenDataTaxi",
+                    "type": "LinkedServiceReference"
+                },
+                "annotations": [],
+                "type": "Parquet",
+                "typeProperties": {
+                    "location": {
+                        "type": "AzureBlobStorageLocation",
+                        "folderPath": "green",
+                        "container": "nyctlc"
+                    },
+                    "compressionCodec": "snappy"
+                },
+                "schema": [
+                    {
+                        "name": "vendorID",
+                        "type": "String"
+                    },
+                    {
+                        "name": "lpepPickupDatetime",
+                        "type": "Timestamp"
+                    },
+                    {
+                        "name": "lpepDropoffDatetime",
+                        "type": "Timestamp"
+                    },
+                    {
+                        "name": "passengerCount",
+                        "type": "Int32"
+                    },
+                    {
+                        "name": "tripDistance",
+                        "type": "Double"
+                    },
+                    {
+                        "name": "puLocationId",
+                        "type": "String"
+                    },
+                    {
+                        "name": "doLocationId",
+                        "type": "String"
+                    },
+                    {
+                        "name": "pickupLongitude",
+                        "type": "Double"
+                    },
+                    {
+                        "name": "pickupLatitude",
+                        "type": "Double"
+                    },
+                    {
+                        "name": "dropoffLongitude",
+                        "type": "Double"
+                    },
+                    {
+                        "name": "dropoffLatitude",
+                        "type": "Double"
+                    },
+                    {
+                        "name": "rateCodeID",
+                        "type": "Int32"
+                    },
+                    {
+                        "name": "storeAndFwdFlag",
+                        "type": "String"
+                    },
+                    {
+                        "name": "paymentType",
+                        "type": "Int32"
+                    },
+                    {
+                        "name": "fareAmount",
+                        "type": "Double"
+                    },
+                    {
+                        "name": "extra",
+                        "type": "Double"
+                    },
+                    {
+                        "name": "mtaTax",
+                        "type": "Double"
+                    },
+                    {
+                        "name": "improvementSurcharge",
+                        "type": "String"
+                    },
+                    {
+                        "name": "tipAmount",
+                        "type": "Double"
+                    },
+                    {
+                        "name": "tollsAmount",
+                        "type": "Double"
+                    },
+                    {
+                        "name": "ehailFee",
+                        "type": "Double"
+                    },
+                    {
+                        "name": "totalAmount",
+                        "type": "Double"
+                    },
+                    {
+                        "name": "tripType",
+                        "type": "Int32"
+                    }
+                ]
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.DataFactory/factories/linkedServices', parameters('factoryName'),  'OpenDataTaxi')]"
+            ]
+        },
+        {
             "name": "[concat(parameters('factoryName'), '/source_taxi_yellow')]",
             "type": "Microsoft.DataFactory/factories/datasets",
             "apiVersion": "2018-06-01",
@@ -185,6 +303,85 @@
             ]
         },
         {
+            "name": "[concat(parameters('factoryName'), '/source_taxi_fhv')]",
+            "type": "Microsoft.DataFactory/factories/datasets",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "linkedServiceName": {
+                    "referenceName": "OpenDataTaxi",
+                    "type": "LinkedServiceReference"
+                },
+                "annotations": [],
+                "type": "Parquet",
+                "typeProperties": {
+                    "location": {
+                        "type": "AzureBlobStorageLocation",
+                        "folderPath": "fhv",
+                        "container": "nyctlc"
+                    },
+                    "compressionCodec": "snappy"
+                },
+                "schema": [
+                    {
+                        "name": "dispatchBaseNum",
+                        "type": "String"
+                    },
+                    {
+                        "name": "doLocationId",
+                        "type": "String"
+                    },
+                    {
+                        "name": "dropOffDateTime",
+                        "type": "Timestamp"
+                    },
+                    {
+                        "name": "pickupDateTime",
+                        "type": "Timestamp"
+                    },
+                    {
+                        "name": "puLocationId",
+                        "type": "String"
+                    },
+                    {
+                        "name": "puMonth",
+                        "type": "Int32"
+                    },
+                    {
+                        "name": "puYear",
+                        "type": "Int32"
+                    },
+                    {
+                        "name": "srFlag",
+                        "type": "String"
+                    }
+                ]
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.DataFactory/factories/linkedServices', parameters('factoryName'),  'OpenDataTaxi')]"
+            ]
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/destination_taxi_green')]",
+            "type": "Microsoft.DataFactory/factories/datasets",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "linkedServiceName": {
+                    "referenceName": "DFSynapse",
+                    "type": "LinkedServiceReference"
+                },
+                "annotations": [],
+                "type": "AzureSqlDWTable",
+                "schema": [],
+                "typeProperties": {
+                    "schema": "dbo",
+                    "table": "taxi_green"
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.DataFactory/factories/linkedServices', parameters('factoryName'), 'DFSynapse')]"
+            ]
+        },
+        {
             "name": "[concat(parameters('factoryName'), '/destination_taxi_yellow')]",
             "type": "Microsoft.DataFactory/factories/datasets",
             "apiVersion": "2018-06-01",
@@ -203,6 +400,357 @@
             },
             "dependsOn": [
                 "[resourceId('Microsoft.DataFactory/factories/linkedServices', parameters('factoryName'), 'DFSynapse')]"
+            ]
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/destination_taxi_fhv')]",
+            "type": "Microsoft.DataFactory/factories/datasets",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "linkedServiceName": {
+                    "referenceName": "DFSynapse",
+                    "type": "LinkedServiceReference"
+                },
+                "annotations": [],
+                "type": "AzureSqlDWTable",
+                "schema": [],
+                "typeProperties": {
+                    "schema": "dbo",
+                    "table": "taxi_fhv"
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.DataFactory/factories/linkedServices', parameters('factoryName'), 'DFSynapse')]"
+            ]
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/copy_taxi_green')]",
+            "type": "Microsoft.DataFactory/factories/pipelines",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "activities": [
+                    {
+                        "name": "copy_taxi_green",
+                        "type": "Copy",
+                        "dependsOn": [],
+                        "policy": {
+                            "timeout": "0.12:00:00",
+                            "retry": 0,
+                            "retryIntervalInSeconds": 30,
+                            "secureOutput": false,
+                            "secureInput": false
+                        },
+                        "userProperties": [
+                            {
+                                "name": "Source",
+                                "value": "nyctlc/green/"
+                            },
+                            {
+                                "name": "Destination",
+                                "value": "dbo.taxi_green"
+                            }
+                        ],
+                        "typeProperties": {
+                            "source": {
+                                "type": "ParquetSource",
+                                "storeSettings": {
+                                    "type": "AzureBlobStorageReadSettings",
+                                    "recursive": true,
+                                    "wildcardFolderPath": "green",
+                                    "wildcardFileName": "*.parquet",
+                                    "enablePartitionDiscovery": false
+                                },
+                                "formatSettings": {
+                                    "type": "ParquetReadSettings"
+                                }
+                            },
+                            "sink": {
+                                "type": "SqlDWSink",
+                                "writeBehavior": "Insert",
+                                "tableOption": "autoCreate"
+                            },
+                            "enableStaging": false,
+                            "enableSkipIncompatibleRow": true,
+                            "validateDataConsistency": false,
+                            "translator": {
+                                "type": "TabularTranslator",
+                                "typeConversion": true,
+                                "typeConversionSettings": {
+                                    "allowDataTruncation": true,
+                                    "treatBooleanAsNumber": false
+                                }
+                            }
+                        },
+                        "inputs": [
+                            {
+                                "referenceName": "source_taxi_green",
+                                "type": "DatasetReference",
+                                "parameters": {}
+                            }
+                        ],
+                        "outputs": [
+                            {
+                                "referenceName": "destination_taxi_green",
+                                "type": "DatasetReference",
+                                "parameters": {}
+                            }
+                        ]
+                    }
+                ]
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.DataFactory/factories/datasets', parameters('factoryName'), 'source_taxi_green')]",
+                "[resourceId('Microsoft.DataFactory/factories/datasets', parameters('factoryName'), 'destination_taxi_green')]"
+            ]
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/copy_taxi_yellow')]",
+            "type": "Microsoft.DataFactory/factories/pipelines",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "activities": [
+                    {
+                        "name": "copy_taxi_yellow",
+                        "type": "Copy",
+                        "dependsOn": [],
+                        "policy": {
+                            "timeout": "0.12:00:00",
+                            "retry": 0,
+                            "retryIntervalInSeconds": 30,
+                            "secureOutput": false,
+                            "secureInput": false
+                        },
+                        "userProperties": [
+                            {
+                                "name": "Source",
+                                "value": "nyctlc/yellow/"
+                            },
+                            {
+                                "name": "Destination",
+                                "value": "dbo.taxi_yellow"
+                            }
+                        ],
+                        "typeProperties": {
+                            "source": {
+                                "type": "ParquetSource",
+                                "storeSettings": {
+                                    "type": "AzureBlobStorageReadSettings",
+                                    "recursive": true,
+                                    "wildcardFolderPath": "yellow",
+                                    "wildcardFileName": "*.parquet",
+                                    "enablePartitionDiscovery": false
+                                },
+                                "formatSettings": {
+                                    "type": "ParquetReadSettings"
+                                }
+                            },
+                            "sink": {
+                                "type": "SqlDWSink",
+                                "writeBehavior": "Insert",
+                                "tableOption": "autoCreate"
+                            },
+                            "enableStaging": false,
+                            "enableSkipIncompatibleRow": true,
+                            "validateDataConsistency": false,
+                            "translator": {
+                                "type": "TabularTranslator",
+                                "typeConversion": true,
+                                "typeConversionSettings": {
+                                    "allowDataTruncation": true,
+                                    "treatBooleanAsNumber": false
+                                }
+                            }
+                        },
+                        "inputs": [
+                            {
+                                "referenceName": "source_taxi_yellow",
+                                "type": "DatasetReference",
+                                "parameters": {}
+                            }
+                        ],
+                        "outputs": [
+                            {
+                                "referenceName": "destination_taxi_yellow",
+                                "type": "DatasetReference",
+                                "parameters": {}
+                            }
+                        ]
+                    }
+                ]
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.DataFactory/factories/datasets', parameters('factoryName'), 'source_taxi_yellow')]",
+                "[resourceId('Microsoft.DataFactory/factories/datasets', parameters('factoryName'), 'destination_taxi_yellow')]"
+            ]
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/copy_taxi_fhv')]",
+            "type": "Microsoft.DataFactory/factories/pipelines",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "activities": [
+                    {
+                        "name": "copy_taxi_fhv",
+                        "type": "Copy",
+                        "dependsOn": [],
+                        "policy": {
+                            "timeout": "0.12:00:00",
+                            "retry": 0,
+                            "retryIntervalInSeconds": 30,
+                            "secureOutput": false,
+                            "secureInput": false
+                        },
+                        "userProperties": [
+                            {
+                                "name": "Source",
+                                "value": "nyctlc/fhv/"
+                            },
+                            {
+                                "name": "Destination",
+                                "value": "dbo.taxi_fhv"
+                            }
+                        ],
+                        "typeProperties": {
+                            "source": {
+                                "type": "ParquetSource",
+                                "storeSettings": {
+                                    "type": "AzureBlobStorageReadSettings",
+                                    "recursive": true,
+                                    "wildcardFolderPath": "fhv",
+                                    "wildcardFileName": "*.parquet",
+                                    "enablePartitionDiscovery": false
+                                },
+                                "formatSettings": {
+                                    "type": "ParquetReadSettings"
+                                }
+                            },
+                            "sink": {
+                                "type": "SqlDWSink",
+                                "writeBehavior": "Insert",
+                                "tableOption": "autoCreate"
+                            },
+                            "enableStaging": false,
+                            "enableSkipIncompatibleRow": true,
+                            "validateDataConsistency": false,
+                            "translator": {
+                                "type": "TabularTranslator",
+                                "typeConversion": true,
+                                "typeConversionSettings": {
+                                    "allowDataTruncation": true,
+                                    "treatBooleanAsNumber": false
+                                }
+                            }
+                        },
+                        "inputs": [
+                            {
+                                "referenceName": "source_taxi_fhv",
+                                "type": "DatasetReference",
+                                "parameters": {}
+                            }
+                        ],
+                        "outputs": [
+                            {
+                                "referenceName": "destination_taxi_fhv",
+                                "type": "DatasetReference",
+                                "parameters": {}
+                            }
+                        ]
+                    }
+                ]
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.DataFactory/factories/datasets', parameters('factoryName'), 'source_taxi_fhv')]",
+                "[resourceId('Microsoft.DataFactory/factories/datasets', parameters('factoryName'), 'destination_taxi_fhv')]"
+            ]
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/trigger_daily_green')]",
+            "type": "Microsoft.DataFactory/factories/triggers",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "annotations": [],
+                "runtimeState": "Started",
+                "pipelines": [
+                    {
+                        "pipelineReference": {
+                            "referenceName": "copy_taxi_green",
+                            "type": "PipelineReference"
+                        },
+                        "parameters": {}
+                    }
+                ],
+                "type": "ScheduleTrigger",
+                "typeProperties": {
+                    "recurrence": {
+                        "frequency": "Hour",
+                        "interval": 24,
+                        "startTime": "[parameters('triggerStartTime')]",
+                        "timeZone": "UTC"
+                    }
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.DataFactory/factories/pipelines', parameters('factoryName'), 'copy_taxi_green')]"
+            ]
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/trigger_daily_yellow')]",
+            "type": "Microsoft.DataFactory/factories/triggers",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "annotations": [],
+                "runtimeState": "Started",
+                "pipelines": [
+                    {
+                        "pipelineReference": {
+                            "referenceName": "copy_taxi_yellow",
+                            "type": "PipelineReference"
+                        },
+                        "parameters": {}
+                    }
+                ],
+                "type": "ScheduleTrigger",
+                "typeProperties": {
+                    "recurrence": {
+                        "frequency": "Hour",
+                        "interval": 24,
+                        "startTime": "[parameters('triggerStartTime')]",
+                        "timeZone": "UTC"
+                    }
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.DataFactory/factories/pipelines', parameters('factoryName'), 'copy_taxi_yellow')]"
+            ]
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/trigger_daily_fhv')]",
+            "type": "Microsoft.DataFactory/factories/triggers",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "annotations": [],
+                "runtimeState": "Started",
+                "pipelines": [
+                    {
+                        "pipelineReference": {
+                            "referenceName": "copy_taxi_fhv",
+                            "type": "PipelineReference"
+                        },
+                        "parameters": {}
+                    }
+                ],
+                "type": "ScheduleTrigger",
+                "typeProperties": {
+                    "recurrence": {
+                        "frequency": "Hour",
+                        "interval": 24,
+                        "startTime": "[parameters('triggerStartTime')]",
+                        "timeZone": "UTC"
+                    }
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.DataFactory/factories/pipelines', parameters('factoryName'), 'copy_taxi_fhv')]"
             ]
         }
     ]
