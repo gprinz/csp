@@ -5,17 +5,11 @@
         "factoryName": {
             "value": "df-2024-ch"
         },
-        "DFSynapse_password": {
-            "value": "NeuBach4"
+        "DestinationDataLakeStorage_properties_typeProperties_serviceEndpoint": {
+            "value": "https://sasynapse2024ch.blob.core.windows.net/"
         },
-        "DFSynapse_properties_typeProperties_server": {
-            "value": "synapse6335.sql.azuresynapse.net"
-        },
-        "DFSynapse_properties_typeProperties_database": {
-            "value": "dwh"
-        },
-        "DFSynapse_properties_typeProperties_userName": {
-            "value": "sqladminuser"
+        "DestinationDataLakeStorage_properties_typeProperties_accountName": {
+            "value": "sasynapse2024ch"
         }
     }
 }

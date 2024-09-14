@@ -17,8 +17,21 @@ resource "azurerm_storage_account" "synapse" {
 
 
 resource "azurerm_storage_data_lake_gen2_filesystem" "file" {
-  name               = "example"
+  name               = "taxi"
   storage_account_id = azurerm_storage_account.synapse.id
+}
+
+variable "directories" {
+  type    = list(string)
+  default = ["green", "yellow", "fhv"]
+}
+
+resource "azurerm_storage_data_lake_gen2_path" "directories" {
+  for_each           = toset(var.directories)
+  filesystem_name    = azurerm_storage_data_lake_gen2_filesystem.file.name
+  storage_account_id = azurerm_storage_account.synapse.id
+  path               = each.value
+  resource           = "directory"
 }
 
 # Key Vault configuration
@@ -60,7 +73,7 @@ resource "azurerm_synapse_workspace" "example" {
   resource_group_name                  = azurerm_resource_group.rg_synapse.name
   location                             = azurerm_resource_group.rg_synapse.location
   storage_data_lake_gen2_filesystem_id = azurerm_storage_data_lake_gen2_filesystem.file.id
-  sql_administrator_login              = null
+  sql_administrator_login              = "sqladminuser"
 
   customer_managed_key {
     key_versionless_id = azurerm_key_vault_key.example.versionless_id

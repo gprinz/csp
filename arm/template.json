@@ -7,59 +7,686 @@
             "metadata": "Data Factory name",
             "defaultValue": "df-2024-ch"
         },
-        "destinationContainerName": {
+        "DestinationDataLakeStorage_properties_typeProperties_serviceEndpoint": {
             "type": "string",
-            "defaultValue": "example"
+            "defaultValue": "https://sasynapse2024ch.blob.core.windows.net/"
         },
-        "destinationStorageAccountName": {
+        "DestinationDataLakeStorage_properties_typeProperties_accountName": {
             "type": "string",
             "defaultValue": "sasynapse2024ch"
-        },
-        "DFSynapse_password": {
-            "type": "string"
-        },
-        "DFSynapse_properties_typeProperties_server": {
-            "type": "string"
-        },
-        "DFSynapse_properties_typeProperties_database": {
-            "type": "string"
-        },
-        "DFSynapse_properties_typeProperties_userName": {
-            "type": "string"
-        },
-        "triggerStartTime": {
-            "type": "string",
-            "defaultValue": "2024-01-01T00:00:00Z",
-            "metadata": "Trigger start time in ISO 8601 format"
         }
+    },
+    "variables": {
+        "factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
     },
     "resources": [
         {
-            "name": "[concat(parameters('factoryName'), '/OpenDataTaxi')]",
-            "type": "Microsoft.DataFactory/factories/linkedServices",
+            "name": "[concat(parameters('factoryName'), '/copy_taxi_fhv')]",
+            "type": "Microsoft.DataFactory/factories/pipelines",
             "apiVersion": "2018-06-01",
             "properties": {
+                "activities": [
+                    {
+                        "name": "copy_taxi_fhv",
+                        "type": "Copy",
+                        "dependsOn": [],
+                        "policy": {
+                            "timeout": "0.12:00:00",
+                            "retry": 0,
+                            "retryIntervalInSeconds": 30,
+                            "secureOutput": false,
+                            "secureInput": false
+                        },
+                        "userProperties": [
+                            {
+                                "name": "Source",
+                                "value": "nyctlc/fhv/"
+                            },
+                            {
+                                "name": "Destination",
+                                "value": "example/taxi_fhv"
+                            }
+                        ],
+                        "typeProperties": {
+                            "source": {
+                                "type": "ParquetSource",
+                                "storeSettings": {
+                                    "type": "AzureBlobStorageReadSettings",
+                                    "recursive": true,
+                                    "wildcardFolderPath": "fhv",
+                                    "wildcardFileName": "*.parquet",
+                                    "enablePartitionDiscovery": false
+                                },
+                                "formatSettings": {
+                                    "type": "ParquetReadSettings"
+                                }
+                            },
+                            "sink": {
+                                "type": "ParquetSink",
+                                "storeSettings": {
+                                    "type": "AzureBlobStorageWriteSettings",
+                                    "blobWriterAddHeader": true,
+                                    "copyBehavior": "PreserveHierarchy"
+                                },
+                                "formatSettings": {
+                                    "type": "ParquetWriteSettings"
+                                }
+                            },
+                            "enableStaging": false,
+                            "enableSkipIncompatibleRow": true,
+                            "validateDataConsistency": false
+                        },
+                        "inputs": [
+                            {
+                                "referenceName": "source_taxi_fhv",
+                                "type": "DatasetReference",
+                                "parameters": {}
+                            }
+                        ],
+                        "outputs": [
+                            {
+                                "referenceName": "destination_taxi_fhv",
+                                "type": "DatasetReference",
+                                "parameters": {}
+                            }
+                        ]
+                    }
+                ],
+                "policy": {
+                    "elapsedTimeMetric": {}
+                },
                 "annotations": [],
-                "type": "AzureBlobStorage",
-                "typeProperties": {
-                    "containerUri": "https://azureopendatastorage.blob.core.windows.net/nyctlc/",
-                    "authenticationType": "Anonymous"
-                }
+                "lastPublishTime": "2024-09-14T20:17:37Z"
             },
-            "dependsOn": []
+            "dependsOn": [
+                "[concat(variables('factoryId'), '/datasets/source_taxi_fhv')]",
+                "[concat(variables('factoryId'), '/datasets/destination_taxi_fhv')]"
+            ]
         },
         {
-            "name": "[concat(parameters('factoryName'), '/DestinationDataLakeStorage')]",
-            "type": "Microsoft.DataFactory/factories/linkedServices",
+            "name": "[concat(parameters('factoryName'), '/copy_taxi_green')]",
+            "type": "Microsoft.DataFactory/factories/pipelines",
             "apiVersion": "2018-06-01",
             "properties": {
-                "type": "AzureBlobStorage",
-                "typeProperties": {
-                    "accountName": "[parameters('destinationStorageAccountName')]",
-                    "authenticationType": "ManagedIdentity"
-                }
+                "activities": [
+                    {
+                        "name": "copy_taxi_green",
+                        "type": "Copy",
+                        "dependsOn": [],
+                        "policy": {
+                            "timeout": "0.12:00:00",
+                            "retry": 0,
+                            "retryIntervalInSeconds": 30,
+                            "secureOutput": false,
+                            "secureInput": false
+                        },
+                        "userProperties": [
+                            {
+                                "name": "Source",
+                                "value": "nyctlc/green/"
+                            },
+                            {
+                                "name": "Destination",
+                                "value": "example/taxi_green"
+                            }
+                        ],
+                        "typeProperties": {
+                            "source": {
+                                "type": "ParquetSource",
+                                "storeSettings": {
+                                    "type": "AzureBlobStorageReadSettings",
+                                    "recursive": true,
+                                    "wildcardFolderPath": "green",
+                                    "wildcardFileName": "*.parquet",
+                                    "enablePartitionDiscovery": false
+                                },
+                                "formatSettings": {
+                                    "type": "ParquetReadSettings"
+                                }
+                            },
+                            "sink": {
+                                "type": "ParquetSink",
+                                "storeSettings": {
+                                    "type": "AzureBlobStorageWriteSettings",
+                                    "blobWriterAddHeader": true,
+                                    "copyBehavior": "PreserveHierarchy"
+                                },
+                                "formatSettings": {
+                                    "type": "ParquetWriteSettings"
+                                }
+                            },
+                            "enableStaging": false,
+                            "enableSkipIncompatibleRow": true,
+                            "validateDataConsistency": false,
+                            "translator": {
+                                "type": "TabularTranslator",
+                                "mappings": [
+                                    {
+                                        "source": {
+                                            "name": "vendorID",
+                                            "type": "Int32",
+                                            "physicalType": "INT32"
+                                        },
+                                        "sink": {
+                                            "name": "vendorID",
+                                            "type": "Int32",
+                                            "physicalType": "INT_32"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "lpepPickupDatetime",
+                                            "type": "DateTime",
+                                            "physicalType": "INT96"
+                                        },
+                                        "sink": {
+                                            "name": "lpepPickupDatetime",
+                                            "type": "DateTime",
+                                            "physicalType": "INT_96"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "lpepDropoffDatetime",
+                                            "type": "DateTime",
+                                            "physicalType": "INT96"
+                                        },
+                                        "sink": {
+                                            "name": "lpepDropoffDatetime",
+                                            "type": "DateTime",
+                                            "physicalType": "INT_96"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "passengerCount",
+                                            "type": "Int32",
+                                            "physicalType": "INT32"
+                                        },
+                                        "sink": {
+                                            "name": "passengerCount",
+                                            "type": "Int32",
+                                            "physicalType": "INT_32"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "tripDistance",
+                                            "type": "Double",
+                                            "physicalType": "DOUBLE"
+                                        },
+                                        "sink": {
+                                            "name": "tripDistance",
+                                            "type": "Double",
+                                            "physicalType": "DOUBLE"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "puLocationId",
+                                            "type": "String",
+                                            "physicalType": "UTF8"
+                                        },
+                                        "sink": {
+                                            "name": "puLocationId",
+                                            "type": "String",
+                                            "physicalType": "UTF8"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "doLocationId",
+                                            "type": "String",
+                                            "physicalType": "UTF8"
+                                        },
+                                        "sink": {
+                                            "name": "doLocationId",
+                                            "type": "String",
+                                            "physicalType": "UTF8"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "pickupLongitude",
+                                            "type": "Double",
+                                            "physicalType": "DOUBLE"
+                                        },
+                                        "sink": {
+                                            "name": "pickupLongitude",
+                                            "type": "Double",
+                                            "physicalType": "DOUBLE"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "pickupLatitude",
+                                            "type": "Double",
+                                            "physicalType": "DOUBLE"
+                                        },
+                                        "sink": {
+                                            "name": "pickupLatitude",
+                                            "type": "Double",
+                                            "physicalType": "DOUBLE"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "dropoffLongitude",
+                                            "type": "Double",
+                                            "physicalType": "DOUBLE"
+                                        },
+                                        "sink": {
+                                            "name": "dropoffLongitude",
+                                            "type": "Double",
+                                            "physicalType": "DOUBLE"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "dropoffLatitude",
+                                            "type": "Double",
+                                            "physicalType": "DOUBLE"
+                                        },
+                                        "sink": {
+                                            "name": "dropoffLatitude",
+                                            "type": "Double",
+                                            "physicalType": "DOUBLE"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "rateCodeID",
+                                            "type": "Int32",
+                                            "physicalType": "INT32"
+                                        },
+                                        "sink": {
+                                            "name": "rateCodeID",
+                                            "type": "Int32",
+                                            "physicalType": "INT_32"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "storeAndFwdFlag",
+                                            "type": "String",
+                                            "physicalType": "UTF8"
+                                        },
+                                        "sink": {
+                                            "name": "storeAndFwdFlag",
+                                            "type": "String",
+                                            "physicalType": "UTF8"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "paymentType",
+                                            "type": "Int32",
+                                            "physicalType": "INT32"
+                                        },
+                                        "sink": {
+                                            "name": "paymentType",
+                                            "type": "Int32",
+                                            "physicalType": "INT_32"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "fareAmount",
+                                            "type": "Double",
+                                            "physicalType": "DOUBLE"
+                                        },
+                                        "sink": {
+                                            "name": "fareAmount",
+                                            "type": "Double",
+                                            "physicalType": "DOUBLE"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "extra",
+                                            "type": "Double",
+                                            "physicalType": "DOUBLE"
+                                        },
+                                        "sink": {
+                                            "name": "extra",
+                                            "type": "Double",
+                                            "physicalType": "DOUBLE"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "mtaTax",
+                                            "type": "Double",
+                                            "physicalType": "DOUBLE"
+                                        },
+                                        "sink": {
+                                            "name": "mtaTax",
+                                            "type": "Double",
+                                            "physicalType": "DOUBLE"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "improvementSurcharge",
+                                            "type": "String",
+                                            "physicalType": "UTF8"
+                                        },
+                                        "sink": {
+                                            "name": "improvementSurcharge",
+                                            "type": "String",
+                                            "physicalType": "UTF8"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "tipAmount",
+                                            "type": "Double",
+                                            "physicalType": "DOUBLE"
+                                        },
+                                        "sink": {
+                                            "name": "tipAmount",
+                                            "type": "Double",
+                                            "physicalType": "DOUBLE"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "tollsAmount",
+                                            "type": "Double",
+                                            "physicalType": "DOUBLE"
+                                        },
+                                        "sink": {
+                                            "name": "tollsAmount",
+                                            "type": "Double",
+                                            "physicalType": "DOUBLE"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "ehailFee",
+                                            "type": "Double",
+                                            "physicalType": "DOUBLE"
+                                        },
+                                        "sink": {
+                                            "name": "ehailFee",
+                                            "type": "Double",
+                                            "physicalType": "DOUBLE"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "totalAmount",
+                                            "type": "Double",
+                                            "physicalType": "DOUBLE"
+                                        },
+                                        "sink": {
+                                            "name": "totalAmount",
+                                            "type": "Double",
+                                            "physicalType": "DOUBLE"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "tripType",
+                                            "type": "Int32",
+                                            "physicalType": "INT32"
+                                        },
+                                        "sink": {
+                                            "name": "tripType",
+                                            "type": "Int32",
+                                            "physicalType": "INT_32"
+                                        }
+                                    }
+                                ],
+                                "typeConversion": true,
+                                "typeConversionSettings": {
+                                    "allowDataTruncation": true,
+                                    "treatBooleanAsNumber": false
+                                }
+                            }
+                        },
+                        "inputs": [
+                            {
+                                "referenceName": "source_taxi_green",
+                                "type": "DatasetReference",
+                                "parameters": {}
+                            }
+                        ],
+                        "outputs": [
+                            {
+                                "referenceName": "destination_taxi_green",
+                                "type": "DatasetReference",
+                                "parameters": {}
+                            }
+                        ]
+                    }
+                ],
+                "policy": {
+                    "elapsedTimeMetric": {}
+                },
+                "annotations": [],
+                "lastPublishTime": "2024-09-14T20:17:37Z"
             },
-            "dependsOn": []
+            "dependsOn": [
+                "[concat(variables('factoryId'), '/datasets/source_taxi_green')]",
+                "[concat(variables('factoryId'), '/datasets/destination_taxi_green')]"
+            ]
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/copy_taxi_yellow')]",
+            "type": "Microsoft.DataFactory/factories/pipelines",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "activities": [
+                    {
+                        "name": "copy_taxi_yellow",
+                        "type": "Copy",
+                        "dependsOn": [],
+                        "policy": {
+                            "timeout": "0.12:00:00",
+                            "retry": 0,
+                            "retryIntervalInSeconds": 30,
+                            "secureOutput": false,
+                            "secureInput": false
+                        },
+                        "userProperties": [
+                            {
+                                "name": "Source",
+                                "value": "nyctlc/yellow/"
+                            },
+                            {
+                                "name": "Destination",
+                                "value": "example/taxi_yellow"
+                            }
+                        ],
+                        "typeProperties": {
+                            "source": {
+                                "type": "ParquetSource",
+                                "storeSettings": {
+                                    "type": "AzureBlobStorageReadSettings",
+                                    "recursive": true,
+                                    "wildcardFolderPath": "yellow",
+                                    "wildcardFileName": "*.parquet",
+                                    "enablePartitionDiscovery": false
+                                },
+                                "formatSettings": {
+                                    "type": "ParquetReadSettings"
+                                }
+                            },
+                            "sink": {
+                                "type": "ParquetSink",
+                                "storeSettings": {
+                                    "type": "AzureBlobStorageWriteSettings",
+                                    "blobWriterAddHeader": true,
+                                    "copyBehavior": "PreserveHierarchy"
+                                },
+                                "formatSettings": {
+                                    "type": "ParquetWriteSettings"
+                                }
+                            },
+                            "enableStaging": false,
+                            "enableSkipIncompatibleRow": true,
+                            "validateDataConsistency": false
+                        },
+                        "inputs": [
+                            {
+                                "referenceName": "source_taxi_yellow",
+                                "type": "DatasetReference",
+                                "parameters": {}
+                            }
+                        ],
+                        "outputs": [
+                            {
+                                "referenceName": "destination_taxi_yellow",
+                                "type": "DatasetReference",
+                                "parameters": {}
+                            }
+                        ]
+                    }
+                ],
+                "policy": {
+                    "elapsedTimeMetric": {}
+                },
+                "annotations": [],
+                "lastPublishTime": "2024-09-14T20:17:37Z"
+            },
+            "dependsOn": [
+                "[concat(variables('factoryId'), '/datasets/source_taxi_yellow')]",
+                "[concat(variables('factoryId'), '/datasets/destination_taxi_yellow')]"
+            ]
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/destination_taxi_fhv')]",
+            "type": "Microsoft.DataFactory/factories/datasets",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "linkedServiceName": {
+                    "referenceName": "DestinationDataLakeStorage",
+                    "type": "LinkedServiceReference"
+                },
+                "annotations": [],
+                "type": "Parquet",
+                "typeProperties": {
+                    "location": {
+                        "type": "AzureBlobStorageLocation",
+                        "folderPath": "fhv",
+                        "container": "taxi"
+                    },
+                    "compressionCodec": "snappy"
+                },
+                "schema": []
+            },
+            "dependsOn": [
+                "[concat(variables('factoryId'), '/linkedServices/DestinationDataLakeStorage')]"
+            ]
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/destination_taxi_yellow')]",
+            "type": "Microsoft.DataFactory/factories/datasets",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "linkedServiceName": {
+                    "referenceName": "DestinationDataLakeStorage",
+                    "type": "LinkedServiceReference"
+                },
+                "annotations": [],
+                "type": "Parquet",
+                "typeProperties": {
+                    "location": {
+                        "type": "AzureBlobStorageLocation",
+                        "folderPath": "yellow",
+                        "container": "taxi"
+                    },
+                    "compressionCodec": "snappy"
+                },
+                "schema": []
+            },
+            "dependsOn": [
+                "[concat(variables('factoryId'), '/linkedServices/DestinationDataLakeStorage')]"
+            ]
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/destination_taxi_green')]",
+            "type": "Microsoft.DataFactory/factories/datasets",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "linkedServiceName": {
+                    "referenceName": "DestinationDataLakeStorage",
+                    "type": "LinkedServiceReference"
+                },
+                "annotations": [],
+                "type": "Parquet",
+                "typeProperties": {
+                    "location": {
+                        "type": "AzureBlobStorageLocation",
+                        "folderPath": "green",
+                        "container": "taxi"
+                    },
+                    "compressionCodec": "snappy"
+                },
+                "schema": []
+            },
+            "dependsOn": [
+                "[concat(variables('factoryId'), '/linkedServices/DestinationDataLakeStorage')]"
+            ]
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/source_taxi_fhv')]",
+            "type": "Microsoft.DataFactory/factories/datasets",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "linkedServiceName": {
+                    "referenceName": "OpenDataTaxi",
+                    "type": "LinkedServiceReference"
+                },
+                "annotations": [],
+                "type": "Parquet",
+                "typeProperties": {
+                    "location": {
+                        "type": "AzureBlobStorageLocation",
+                        "folderPath": "fhv",
+                        "container": "nyctlc"
+                    },
+                    "compressionCodec": "snappy"
+                },
+                "schema": [
+                    {
+                        "name": "dispatchBaseNum",
+                        "type": "String"
+                    },
+                    {
+                        "name": "doLocationId",
+                        "type": "String"
+                    },
+                    {
+                        "name": "dropOffDateTime",
+                        "type": "Timestamp"
+                    },
+                    {
+                        "name": "pickupDateTime",
+                        "type": "Timestamp"
+                    },
+                    {
+                        "name": "puLocationId",
+                        "type": "String"
+                    },
+                    {
+                        "name": "puMonth",
+                        "type": "Int32"
+                    },
+                    {
+                        "name": "puYear",
+                        "type": "Int32"
+                    },
+                    {
+                        "name": "srFlag",
+                        "type": "String"
+                    }
+                ]
+            },
+            "dependsOn": [
+                "[concat(variables('factoryId'), '/linkedServices/OpenDataTaxi')]"
+            ]
         },
         {
             "name": "[concat(parameters('factoryName'), '/source_taxi_green')]",
@@ -176,7 +803,7 @@
                 ]
             },
             "dependsOn": [
-                "[resourceId('Microsoft.DataFactory/factories/linkedServices', parameters('factoryName'),  'OpenDataTaxi')]"
+                "[concat(variables('factoryId'), '/linkedServices/OpenDataTaxi')]"
             ]
         },
         {
@@ -294,398 +921,7 @@
                 ]
             },
             "dependsOn": [
-                "[resourceId('Microsoft.DataFactory/factories/linkedServices', parameters('factoryName'),  'OpenDataTaxi')]"
-            ]
-        },
-        {
-            "name": "[concat(parameters('factoryName'), '/source_taxi_fhv')]",
-            "type": "Microsoft.DataFactory/factories/datasets",
-            "apiVersion": "2018-06-01",
-            "properties": {
-                "linkedServiceName": {
-                    "referenceName": "OpenDataTaxi",
-                    "type": "LinkedServiceReference"
-                },
-                "annotations": [],
-                "type": "Parquet",
-                "typeProperties": {
-                    "location": {
-                        "type": "AzureBlobStorageLocation",
-                        "folderPath": "fhv",
-                        "container": "nyctlc"
-                    },
-                    "compressionCodec": "snappy"
-                },
-                "schema": [
-                    {
-                        "name": "dispatchBaseNum",
-                        "type": "String"
-                    },
-                    {
-                        "name": "doLocationId",
-                        "type": "String"
-                    },
-                    {
-                        "name": "dropOffDateTime",
-                        "type": "Timestamp"
-                    },
-                    {
-                        "name": "pickupDateTime",
-                        "type": "Timestamp"
-                    },
-                    {
-                        "name": "puLocationId",
-                        "type": "String"
-                    },
-                    {
-                        "name": "puMonth",
-                        "type": "Int32"
-                    },
-                    {
-                        "name": "puYear",
-                        "type": "Int32"
-                    },
-                    {
-                        "name": "srFlag",
-                        "type": "String"
-                    }
-                ]
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.DataFactory/factories/linkedServices', parameters('factoryName'),  'OpenDataTaxi')]"
-            ]
-        },
-        {
-            "name": "[concat(parameters('factoryName'), '/destination_taxi_green')]",
-            "type": "Microsoft.DataFactory/factories/datasets",
-            "apiVersion": "2018-06-01",
-            "properties": {
-                "linkedServiceName": {
-                    "referenceName": "DestinationDataLakeStorage",
-                    "type": "LinkedServiceReference"
-                },
-                "annotations": [],
-                "type": "Parquet",
-                "schema": [],
-                "typeProperties": {
-                    "location": {
-                        "type": "AzureBlobStorageLocation",
-                        "container": "[parameters('destinationContainerName')]",
-                        "folderPath": "taxi_green"
-                    }
-                }
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.DataFactory/factories/linkedServices', parameters('factoryName'), 'DestinationDataLakeStorage')]"
-            ]
-        },
-        {
-            "name": "[concat(parameters('factoryName'), '/destination_taxi_yellow')]",
-            "type": "Microsoft.DataFactory/factories/datasets",
-            "apiVersion": "2018-06-01",
-            "properties": {
-                "linkedServiceName": {
-                    "referenceName": "DestinationDataLakeStorage",
-                    "type": "LinkedServiceReference"
-                },
-                "annotations": [],
-                "type": "Parquet",
-                "schema": [],
-                "typeProperties": {
-                    "location": {
-                        "type": "AzureBlobStorageLocation",
-                        "container": "[parameters('destinationContainerName')]",
-                        "folderPath": "taxi_yellow"
-                    }
-                }
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.DataFactory/factories/linkedServices', parameters('factoryName'), 'DestinationDataLakeStorage')]"
-            ]
-        },
-        {
-            "name": "[concat(parameters('factoryName'), '/destination_taxi_fhv')]",
-            "type": "Microsoft.DataFactory/factories/datasets",
-            "apiVersion": "2018-06-01",
-            "properties": {
-                "linkedServiceName": {
-                    "referenceName": "DestinationDataLakeStorage",
-                    "type": "LinkedServiceReference"
-                },
-                "annotations": [],
-                "type": "Parquet",
-                "schema": [],
-                "typeProperties": {
-                    "location": {
-                        "type": "AzureBlobStorageLocation",
-                        "container": "[parameters('destinationContainerName')]",
-                        "folderPath": "taxi_fhv"
-                    }
-                }
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.DataFactory/factories/linkedServices', parameters('factoryName'), 'DestinationDataLakeStorage')]"
-            ]
-        },
-        {
-            "name": "[concat(parameters('factoryName'), '/copy_taxi_green')]",
-            "type": "Microsoft.DataFactory/factories/pipelines",
-            "apiVersion": "2018-06-01",
-            "properties": {
-                "activities": [
-                    {
-                        "name": "copy_taxi_green",
-                        "type": "Copy",
-                        "dependsOn": [],
-                        "policy": {
-                            "timeout": "0.12:00:00",
-                            "retry": 0,
-                            "retryIntervalInSeconds": 30,
-                            "secureOutput": false,
-                            "secureInput": false
-                        },
-                        "userProperties": [
-                            {
-                                "name": "Source",
-                                "value": "nyctlc/green/"
-                            },
-                            {
-                                "name": "Destination",
-                                "value": "[concat(parameters('destinationContainerName'), '/taxi_green')]"
-                            }
-                        ],
-                        "typeProperties": {
-                            "source": {
-                                "type": "ParquetSource",
-                                "storeSettings": {
-                                    "type": "AzureBlobStorageReadSettings",
-                                    "recursive": true,
-                                    "wildcardFolderPath": "green",
-                                    "wildcardFileName": "*.parquet",
-                                    "enablePartitionDiscovery": false
-                                },
-                                "formatSettings": {
-                                    "type": "ParquetReadSettings"
-                                }
-                            },
-                            "sink": {
-                                "type": "ParquetSink",
-                                "storeSettings": {
-                                    "type": "AzureBlobStorageWriteSettings",
-                                    "blobWriterAddHeader": true
-                                },
-                                "formatSettings": {
-                                    "type": "ParquetWriteSettings"
-                                }
-                            },
-                            "enableStaging": false,
-                            "enableSkipIncompatibleRow": true,
-                            "validateDataConsistency": false
-                        },
-                        "inputs": [
-                            {
-                                "referenceName": "source_taxi_green",
-                                "type": "DatasetReference",
-                                "parameters": {}
-                            }
-                        ],
-                        "outputs": [
-                            {
-                                "referenceName": "destination_taxi_green",
-                                "type": "DatasetReference",
-                                "parameters": {}
-                            }
-                        ]
-                    }
-                ]
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.DataFactory/factories/datasets', parameters('factoryName'), 'source_taxi_green')]",
-                "[resourceId('Microsoft.DataFactory/factories/datasets', parameters('factoryName'), 'destination_taxi_green')]"
-            ]
-        },
-        {
-            "name": "[concat(parameters('factoryName'), '/copy_taxi_yellow')]",
-            "type": "Microsoft.DataFactory/factories/pipelines",
-            "apiVersion": "2018-06-01",
-            "properties": {
-                "activities": [
-                    {
-                        "name": "copy_taxi_yellow",
-                        "type": "Copy",
-                        "dependsOn": [],
-                        "policy": {
-                            "timeout": "0.12:00:00",
-                            "retry": 0,
-                            "retryIntervalInSeconds": 30,
-                            "secureOutput": false,
-                            "secureInput": false
-                        },
-                        "userProperties": [
-                            {
-                                "name": "Source",
-                                "value": "nyctlc/yellow/"
-                            },
-                            {
-                                "name": "Destination",
-                                "value": "[concat(parameters('destinationContainerName'), '/taxi_yellow')]"
-                            }
-                        ],
-                        "typeProperties": {
-                            "source": {
-                                "type": "ParquetSource",
-                                "storeSettings": {
-                                    "type": "AzureBlobStorageReadSettings",
-                                    "recursive": true,
-                                    "wildcardFolderPath": "yellow",
-                                    "wildcardFileName": "*.parquet",
-                                    "enablePartitionDiscovery": false
-                                },
-                                "formatSettings": {
-                                    "type": "ParquetReadSettings"
-                                }
-                            },
-                            "sink": {
-                                "type": "ParquetSink",
-                                "storeSettings": {
-                                    "type": "AzureBlobStorageWriteSettings",
-                                    "blobWriterAddHeader": true
-                                },
-                                "formatSettings": {
-                                    "type": "ParquetWriteSettings"
-                                }
-                            },
-                            "enableStaging": false,
-                            "enableSkipIncompatibleRow": true,
-                            "validateDataConsistency": false
-                        },
-                        "inputs": [
-                            {
-                                "referenceName": "source_taxi_yellow",
-                                "type": "DatasetReference",
-                                "parameters": {}
-                            }
-                        ],
-                        "outputs": [
-                            {
-                                "referenceName": "destination_taxi_yellow",
-                                "type": "DatasetReference",
-                                "parameters": {}
-                            }
-                        ]
-                    }
-                ]
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.DataFactory/factories/datasets', parameters('factoryName'), 'source_taxi_yellow')]",
-                "[resourceId('Microsoft.DataFactory/factories/datasets', parameters('factoryName'), 'destination_taxi_yellow')]"
-            ]
-        },
-        {
-            "name": "[concat(parameters('factoryName'), '/copy_taxi_fhv')]",
-            "type": "Microsoft.DataFactory/factories/pipelines",
-            "apiVersion": "2018-06-01",
-            "properties": {
-                "activities": [
-                    {
-                        "name": "copy_taxi_fhv",
-                        "type": "Copy",
-                        "dependsOn": [],
-                        "policy": {
-                            "timeout": "0.12:00:00",
-                            "retry": 0,
-                            "retryIntervalInSeconds": 30,
-                            "secureOutput": false,
-                            "secureInput": false
-                        },
-                        "userProperties": [
-                            {
-                                "name": "Source",
-                                "value": "nyctlc/fhv/"
-                            },
-                            {
-                                "name": "Destination",
-                                "value": "[concat(parameters('destinationContainerName'), '/taxi_fhv')]"
-                            }
-                        ],
-                        "typeProperties": {
-                            "source": {
-                                "type": "ParquetSource",
-                                "storeSettings": {
-                                    "type": "AzureBlobStorageReadSettings",
-                                    "recursive": true,
-                                    "wildcardFolderPath": "fhv",
-                                    "wildcardFileName": "*.parquet",
-                                    "enablePartitionDiscovery": false
-                                },
-                                "formatSettings": {
-                                    "type": "ParquetReadSettings"
-                                }
-                            },
-                            "sink": {
-                                "type": "ParquetSink",
-                                "storeSettings": {
-                                    "type": "AzureBlobStorageWriteSettings",
-                                    "blobWriterAddHeader": true
-                                },
-                                "formatSettings": {
-                                    "type": "ParquetWriteSettings"
-                                }
-                            },
-                            "enableStaging": false,
-                            "enableSkipIncompatibleRow": true,
-                            "validateDataConsistency": false
-                        },
-                        "inputs": [
-                            {
-                                "referenceName": "source_taxi_fhv",
-                                "type": "DatasetReference",
-                                "parameters": {}
-                            }
-                        ],
-                        "outputs": [
-                            {
-                                "referenceName": "destination_taxi_fhv",
-                                "type": "DatasetReference",
-                                "parameters": {}
-                            }
-                        ]
-                    }
-                ]
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.DataFactory/factories/datasets', parameters('factoryName'), 'source_taxi_fhv')]",
-                "[resourceId('Microsoft.DataFactory/factories/datasets', parameters('factoryName'), 'destination_taxi_fhv')]"
-            ]
-        },
-        {
-            "name": "[concat(parameters('factoryName'), '/trigger_daily_green')]",
-            "type": "Microsoft.DataFactory/factories/triggers",
-            "apiVersion": "2018-06-01",
-            "properties": {
-                "annotations": [],
-                "runtimeState": "Started",
-                "pipelines": [
-                    {
-                        "pipelineReference": {
-                            "referenceName": "copy_taxi_green",
-                            "type": "PipelineReference"
-                        },
-                        "parameters": {}
-                    }
-                ],
-                "type": "ScheduleTrigger",
-                "typeProperties": {
-                    "recurrence": {
-                        "frequency": "Hour",
-                        "interval": 24,
-                        "startTime": "[parameters('triggerStartTime')]",
-                        "timeZone": "UTC"
-                    }
-                }
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.DataFactory/factories/pipelines', parameters('factoryName'), 'copy_taxi_green')]"
+                "[concat(variables('factoryId'), '/linkedServices/OpenDataTaxi')]"
             ]
         },
         {
@@ -694,7 +930,7 @@
             "apiVersion": "2018-06-01",
             "properties": {
                 "annotations": [],
-                "runtimeState": "Started",
+                "runtimeState": "Stopped",
                 "pipelines": [
                     {
                         "pipelineReference": {
@@ -709,13 +945,13 @@
                     "recurrence": {
                         "frequency": "Hour",
                         "interval": 24,
-                        "startTime": "[parameters('triggerStartTime')]",
+                        "startTime": "2024-01-01T00:00:00Z",
                         "timeZone": "UTC"
                     }
                 }
             },
             "dependsOn": [
-                "[resourceId('Microsoft.DataFactory/factories/pipelines', parameters('factoryName'), 'copy_taxi_yellow')]"
+                "[concat(variables('factoryId'), '/pipelines/copy_taxi_yellow')]"
             ]
         },
         {
@@ -724,7 +960,7 @@
             "apiVersion": "2018-06-01",
             "properties": {
                 "annotations": [],
-                "runtimeState": "Started",
+                "runtimeState": "Stopped",
                 "pipelines": [
                     {
                         "pipelineReference": {
@@ -739,14 +975,73 @@
                     "recurrence": {
                         "frequency": "Hour",
                         "interval": 24,
-                        "startTime": "[parameters('triggerStartTime')]",
+                        "startTime": "2024-01-01T00:00:00Z",
                         "timeZone": "UTC"
                     }
                 }
             },
             "dependsOn": [
-                "[resourceId('Microsoft.DataFactory/factories/pipelines', parameters('factoryName'), 'copy_taxi_fhv')]"
+                "[concat(variables('factoryId'), '/pipelines/copy_taxi_fhv')]"
             ]
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/trigger_daily_green')]",
+            "type": "Microsoft.DataFactory/factories/triggers",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "annotations": [],
+                "runtimeState": "Stopped",
+                "pipelines": [
+                    {
+                        "pipelineReference": {
+                            "referenceName": "copy_taxi_green",
+                            "type": "PipelineReference"
+                        },
+                        "parameters": {}
+                    }
+                ],
+                "type": "ScheduleTrigger",
+                "typeProperties": {
+                    "recurrence": {
+                        "frequency": "Hour",
+                        "interval": 24,
+                        "startTime": "2024-01-01T00:00:00Z",
+                        "timeZone": "UTC"
+                    }
+                }
+            },
+            "dependsOn": [
+                "[concat(variables('factoryId'), '/pipelines/copy_taxi_green')]"
+            ]
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/DestinationDataLakeStorage')]",
+            "type": "Microsoft.DataFactory/factories/linkedServices",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "annotations": [],
+                "type": "AzureBlobStorage",
+                "typeProperties": {
+                    "serviceEndpoint": "[parameters('DestinationDataLakeStorage_properties_typeProperties_serviceEndpoint')]",
+                    "accountKind": "StorageV2",
+                    "accountName": "[parameters('DestinationDataLakeStorage_properties_typeProperties_accountName')]"
+                }
+            },
+            "dependsOn": []
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/OpenDataTaxi')]",
+            "type": "Microsoft.DataFactory/factories/linkedServices",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "annotations": [],
+                "type": "AzureBlobStorage",
+                "typeProperties": {
+                    "containerUri": "https://azureopendatastorage.blob.core.windows.net/nyctlc/",
+                    "authenticationType": "Anonymous"
+                }
+            },
+            "dependsOn": []
         }
     ]
 }
