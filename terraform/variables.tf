@@ -20,6 +20,16 @@ variable "ARM_TENANT_ID" {
   type        = string
 }
 
+variable "SYNAPSE_ADMIN_USER" {
+  description = "The tenant ID for Azure"
+  type        = string
+}
+
+variable "SYNAPSE_ADMIN_PWD" {
+  description = "The tenant ID for Azure"
+  type        = string
+}
+
 variable "azure_devops_org_service_url" {
   description = "Azure DevOps Organization URL"
   default     = "cps-ethz-2024"
