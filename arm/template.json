@@ -22,6 +22,11 @@
         "DFSynapse_properties_typeProperties_userName": {
             "type": "string",
             "defaultValue": "sqladminuser"
+        },
+        "triggerStartTime": {
+            "type": "string",
+            "defaultValue": "[utcNow()]",
+            "metadata": "Trigger start time"
         }
     },
     "resources": [
@@ -306,7 +311,7 @@
                     "recurrence": {
                         "frequency": "Hour",
                         "interval": 24,
-                        "startTime": "[utcNow()]",
+                        "startTime": "[parameters('triggerStartTime')]",
                         "timeZone": "UTC"
                     }
                 }
