@@ -19,6 +19,18 @@
             "type": "string",
             "defaultValue": "2024-01-01T00:00:00Z",
             "metadata": "Trigger start time in ISO 8601 format"
+        },
+        "DFSynapse_password": {
+            "type": "securestring"
+        },
+        "DFSynapse_properties_typeProperties_server": {
+            "type": "string"
+        },
+        "DFSynapse_properties_typeProperties_database": {
+            "type": "string"
+        },
+        "DFSynapse_properties_typeProperties_userName": {
+            "type": "string"
         }
     },
     "resources": [
