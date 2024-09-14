@@ -57,7 +57,7 @@ resource "azurerm_application_insights" "ai" {
 
 # Key Vault configuration
 resource "azurerm_key_vault" "kv" {
-  name                     = "kv-${local.current_year}-ch200"
+  name                     = "kv-${local.current_year}-ch300"
   location                 = azurerm_resource_group.ml_rg.location
   resource_group_name      = azurerm_resource_group.ml_rg.name
   tenant_id                = data.azurerm_client_config.current.tenant_id
@@ -83,7 +83,6 @@ resource "azurerm_storage_account" "raw_data" {
   account_replication_type = "LRS"
 }
 
-
 # Key Vault access policy
 resource "azurerm_key_vault_access_policy" "kv_access" {
   key_vault_id = azurerm_key_vault.kv.id
@@ -97,8 +96,6 @@ resource "azurerm_key_vault_access_policy" "kv_access" {
     "Purge",
     "GetRotationPolicy",
     "Recover",
-    "WrapKey",
-    "UnwrapKey"
   ]
 }
 

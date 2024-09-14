@@ -65,6 +65,16 @@ resource "azurerm_synapse_workspace" "example" {
   }
 }
 
+resource "azurerm_key_vault_access_policy" "workspace_policy" {
+  key_vault_id = azurerm_key_vault.kv.id
+  tenant_id    = azurerm_synapse_workspace.example.identity[0].tenant_id
+  object_id    = azurerm_synapse_workspace.example.identity[0].principal_id
+
+  key_permissions = [
+    "Get", "WrapKey", "UnwrapKey"
+  ]
+}
+
 resource "azurerm_synapse_workspace_key" "example" {
   customer_managed_key_versionless_id = azurerm_key_vault_key.example.versionless_id
   synapse_workspace_id                = azurerm_synapse_workspace.example.id
