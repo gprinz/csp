@@ -286,7 +286,7 @@
             ]
         },
         {
-            "name": "[concat(parameters('factoryName'), '/trigger_weekly')]",
+            "name": "[concat(parameters('factoryName'), '/trigger_daily_gt')]",
             "type": "Microsoft.DataFactory/factories/triggers",
             "apiVersion": "2018-06-01",
             "properties": {
@@ -306,7 +306,7 @@
                     "recurrence": {
                         "frequency": "Hour",
                         "interval": 24,
-                        "startTime": "2024-08-03T13:32:00Z",
+                        "startTime": "[utcNow()]",
                         "timeZone": "UTC"
                     }
                 }
