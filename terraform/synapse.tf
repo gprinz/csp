@@ -41,13 +41,6 @@ resource "azurerm_synapse_workspace" "synapse" {
 }
 
 # Assign Synapse Administrator role to the managed identity
-resource "azurerm_role_assignment" "synapse_admin_role" {
-  principal_id         = azurerm_synapse_workspace.synapse.identity[0].principal_id
-  role_definition_name = "Synapse Administrator"
-  scope                = "/subscriptions/796313f9-881f-4bee-bd46-ba6ad10afbb4"
-}
-
-# Assign Synapse Administrator role to the managed identity
 resource "azurerm_role_assignment" "contributor_role" {
   principal_id         = azurerm_synapse_workspace.synapse.identity[0].principal_id
   role_definition_name = "Contributor"
