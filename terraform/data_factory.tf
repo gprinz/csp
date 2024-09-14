@@ -37,5 +37,5 @@ resource "azurerm_data_factory" "adf" {
 resource "azurerm_role_assignment" "adf_blob_contributor" {
   scope                = azurerm_storage_account.synapse.id
   role_definition_name = "Storage Blob Data Contributor"
-  principal_id         = azurerm_data_factory.adf.identity.principal_id
+  principal_id         = azurerm_data_factory.adf.identity[0].principal_id
 }
