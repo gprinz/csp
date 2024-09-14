@@ -24,6 +24,7 @@ provider "azurerm" {
 
 # Get Subscription ID
 data "azurerm_client_config" "current" {}
+data "azurerm_subscription" "primary" {}
 
 data "external" "current_year" {
   program = ["sh", "-c", "echo {\\\"year\\\":\\\"$(date +%Y)\\\"}"]
