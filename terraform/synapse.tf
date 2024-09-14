@@ -23,7 +23,7 @@ resource "azurerm_storage_data_lake_gen2_filesystem" "file" {
 
 # Key Vault configuration
 resource "azurerm_key_vault" "kv2" {
-  name                     = "kv-${local.current_year}-ch300"
+  name                     = "kv-${local.current_year}-ch400"
   location                 = azurerm_resource_group.ml_rg.location
   resource_group_name      = azurerm_resource_group.ml_rg.name
   tenant_id                = data.azurerm_client_config.current.tenant_id
