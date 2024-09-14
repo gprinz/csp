@@ -15,3 +15,10 @@ resource "azurerm_data_factory" "df" {
     type = "SystemAssigned"
   }
 }
+
+# Assign Synapse Administrator role to the managed identity
+resource "azurerm_role_assignment" "df_admin_role" {
+  principal_id         = azurerm_data_factory.df.identity[0].principal_id
+  role_definition_name = "Contributor"
+  scope                = "/subscriptions/796313f9-881f-4bee-bd46-ba6ad10afbb4"
+}

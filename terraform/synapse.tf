@@ -19,14 +19,6 @@ resource "azurerm_storage_data_lake_gen2_filesystem" "file" {
   storage_account_id = azurerm_storage_account.synapse.id
 }
 
-# Example for allowing all Azure services to connect (not recommended for production)
-resource "azurerm_synapse_firewall_rule" "allow_azure_services" {
-  name                 = "AllowAllWindowsAzureIps"
-  synapse_workspace_id = azurerm_synapse_workspace.synapse.id
-  start_ip_address     = "0.0.0.0"
-  end_ip_address       = "0.0.0.0"
-}
-
 resource "azurerm_synapse_workspace" "synapse" {
   name                                 = "synapse6335"
   resource_group_name                  = azurerm_resource_group.rg_synapse.name
