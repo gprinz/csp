@@ -15,7 +15,6 @@ resource "azurerm_storage_account" "synapse" {
   is_hns_enabled           = "true"
 }
 
-
 resource "azurerm_storage_data_lake_gen2_filesystem" "fs" {
   name               = "taxi"
   storage_account_id = azurerm_storage_account.synapse.id
