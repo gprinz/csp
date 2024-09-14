@@ -1,6 +1,3 @@
-
-data "azurerm_client_config" "current" {}
-
 # Resource Group for production
 resource "azurerm_resource_group" "rg_synapse" {
   name     = "rgsyn${local.current_year}ch6"
