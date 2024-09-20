@@ -20,7 +20,6 @@ resource "null_resource" "subscription_association" {
     command = "az account management-group subscription add --management-group-id ${self.triggers.management_group_id} --subscription ${self.triggers.subscription_id}"
   }
 }
-
 #resource "azurerm_policy_definition" "location_restriction" {
 #  name         = "restrict-resource-location"
 #  policy_type  = "Custom"
