@@ -1,45 +1,47 @@
 # Resource Group for production
-resource "azurerm_resource_group" "rg_synapse" {
-  name     = "rgsyn${local.current_year}ch"
+resource "azurerm_resource_group" "rg_data_platform" {
+  name     = "rgdp${local.current_year}ch"
   location = "West Europe"
 }
 
 # Storage account configuration
-resource "azurerm_storage_account" "synapse" {
-  name                     = "sasynapse${local.current_year}ch"
-  location                 = azurerm_resource_group.rg_synapse.location
-  resource_group_name      = azurerm_resource_group.rg_synapse.name
+resource "azurerm_storage_account" "data_lake" {
+  name                     = "sadataplatform${local.current_year}ch"
+  location                 = azurerm_resource_group.rg_data_platform.location
+  resource_group_name      = azurerm_resource_group.rg_data_platform.name
   account_tier             = "Standard"
   account_replication_type = "LRS"
   account_kind             = "StorageV2"
-  is_hns_enabled           = "true"
+  is_hns_enabled           = true
 }
 
-resource "azurerm_storage_data_lake_gen2_filesystem" "fs" {
-  name               = "taxi"
-  storage_account_id = azurerm_storage_account.synapse.id
+# Data Lake Gen2 Filesystem configuration
+resource "azurerm_storage_data_lake_gen2_filesystem" "data_lake_fs" {
+  name               = "datalake"
+  storage_account_id = azurerm_storage_account.data_lake.id
 }
 
+# Directories variable
 variable "directories" {
   type    = list(string)
   default = ["green", "yellow", "fhv"]
 }
 
-resource "azurerm_storage_data_lake_gen2_path" "directories" {
+# Data Lake Gen2 Path for directories
+resource "azurerm_storage_data_lake_gen2_path" "data_lake_directories" {
   for_each           = toset(var.directories)
-  filesystem_name    = azurerm_storage_data_lake_gen2_filesystem.fs.name
-  storage_account_id = azurerm_storage_account.synapse.id
+  filesystem_name    = azurerm_storage_data_lake_gen2_filesystem.data_lake_fs.name
+  storage_account_id = azurerm_storage_account.data_lake.id
   path               = each.value
   resource           = "directory"
 }
 
-
-
-resource "azurerm_synapse_workspace" "example" {
-  name                                 = "synapse6335"
-  resource_group_name                  = azurerm_resource_group.rg_synapse.name
-  location                             = azurerm_resource_group.rg_synapse.location
-  storage_data_lake_gen2_filesystem_id = azurerm_storage_data_lake_gen2_filesystem.fs.id
+# Synapse Workspace configuration
+resource "azurerm_synapse_workspace" "synapse_workspace" {
+  name                                 = "synapseworkspace${local.current_year}"
+  resource_group_name                  = azurerm_resource_group.rg_data_platform.name
+  location                             = azurerm_resource_group.rg_data_platform.location
+  storage_data_lake_gen2_filesystem_id = azurerm_storage_data_lake_gen2_filesystem.data_lake_fs.id
   sql_administrator_login              = "sqladminuser"
 
   identity {
@@ -47,8 +49,9 @@ resource "azurerm_synapse_workspace" "example" {
   }
 }
 
-resource "azurerm_role_assignment" "synapse_blob_reader" {
+# Role assignment for Synapse Blob Reader
+resource "azurerm_role_assignment" "synapse_contributor_role" {
   scope                = data.azurerm_subscription.primary.id
   role_definition_name = "Contributor"
-  principal_id         = azurerm_synapse_workspace.example.identity[0].principal_id
+  principal_id         = azurerm_synapse_workspace.synapse_workspace.identity[0].principal_id
 }

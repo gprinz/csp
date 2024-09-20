@@ -5,6 +5,7 @@ terraform {
       name = "PROD"
     }
   }
+
   required_providers {
     azuredevops = {
       source  = "microsoft/azuredevops"
@@ -22,7 +23,7 @@ provider "azurerm" {
   }
 }
 
-# Get Subscription ID
+# Get Subscription ID and current year
 data "azurerm_client_config" "current" {}
 data "azurerm_subscription" "primary" {}
 
@@ -40,13 +41,11 @@ resource "azurerm_resource_group" "rg_prod" {
   location = "West Europe"
 }
 
-
 # Resource Group for machine learning
 resource "azurerm_resource_group" "ml_rg" {
   name     = "rg-ml-${local.current_year}-ch"
   location = "West Europe"
 }
-
 
 # Application Insights configuration
 resource "azurerm_application_insights" "ai" {
@@ -91,29 +90,7 @@ resource "azurerm_key_vault_access_policy" "kv_access" {
   ]
 }
 
-# Key Vault key
-resource "azurerm_key_vault_key" "kv_key" {
-  name         = "kv-key-${local.current_year}ch"
-  key_vault_id = azurerm_key_vault.kv.id
-  key_type     = "RSA"
-  key_size     = 2048
-
-  key_opts = [
-    "decrypt",
-    "encrypt",
-    "sign",
-    "unwrapKey",
-    "verify",
-    "wrapKey"
-  ]
-
-  depends_on = [
-    azurerm_key_vault.kv,
-    azurerm_key_vault_access_policy.kv_access
-  ]
-}
-
-# Machine learning workspace configuration
+# Machine Learning Workspace (Feature Store) configuration
 resource "azurerm_machine_learning_workspace" "fstore" {
   name                    = "fstore-${local.current_year}-ch"
   location                = azurerm_resource_group.ml_rg.location
@@ -131,19 +108,9 @@ resource "azurerm_machine_learning_workspace" "fstore" {
   identity {
     type = "SystemAssigned"
   }
-
-  encryption {
-    key_vault_id = azurerm_key_vault.kv.id
-    key_id       = azurerm_key_vault_key.kv_key.id
-  }
 }
 
-resource "azurerm_role_assignment" "a1" {
-  principal_id         = azurerm_machine_learning_workspace.fstore.identity[0].principal_id
-  role_definition_name = "Contributor"
-  scope                = data.azurerm_subscription.primary.id
-}
-
+# Machine Learning Workspace configuration
 resource "azurerm_machine_learning_workspace" "ml_workspace" {
   name                    = "workspace-${local.current_year}-ch"
   location                = azurerm_resource_group.ml_rg.location
@@ -156,14 +123,16 @@ resource "azurerm_machine_learning_workspace" "ml_workspace" {
   identity {
     type = "SystemAssigned"
   }
-
-  encryption {
-    key_vault_id = azurerm_key_vault.kv.id
-    key_id       = azurerm_key_vault_key.kv_key.id
-  }
 }
 
-resource "azurerm_role_assignment" "a2" {
+# Role assignment for all managed identities (Contributor role at subscription level)
+resource "azurerm_role_assignment" "fstore_contributor" {
+  principal_id         = azurerm_machine_learning_workspace.fstore.identity[0].principal_id
+  role_definition_name = "Contributor"
+  scope                = data.azurerm_subscription.primary.id
+}
+
+resource "azurerm_role_assignment" "ml_workspace_contributor" {
   principal_id         = azurerm_machine_learning_workspace.ml_workspace.identity[0].principal_id
   role_definition_name = "Contributor"
   scope                = data.azurerm_subscription.primary.id

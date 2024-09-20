@@ -9,11 +9,11 @@
         },
         "DestinationDataLakeStorage_properties_typeProperties_serviceEndpoint": {
             "type": "string",
-            "defaultValue": "https://sasynapse2024ch.blob.core.windows.net/"
+            "defaultValue": "https://sadataplatform2024ch.blob.core.windows.net/"
         },
         "DestinationDataLakeStorage_properties_typeProperties_accountName": {
             "type": "string",
-            "defaultValue": "sasynapse2024ch"
+            "defaultValue": "sadataplatform2024ch"
         }
     },
     "variables": {
