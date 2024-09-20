@@ -14,7 +14,7 @@ resource "azurerm_management_group" "mg_testing" {
 }
 
 # Resource for Subscription Management Group Association
-resource "azurerm_management_group_subscription" "subscription_mgmt_group_association" {
+resource "azurerm_management_group_subscription_association" "subscription_mgmt_group_association" {
   management_group_id = azurerm_management_group.mg_production.id
   subscription_id     = data.azurerm_client_config.current.subscription_id
 }
