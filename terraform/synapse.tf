@@ -38,7 +38,7 @@ resource "azurerm_storage_data_lake_gen2_path" "data_lake_directories" {
 
 # Synapse Workspace configuration
 resource "azurerm_synapse_workspace" "synapse_workspace" {
-  name                                 = "synapseworkspace${local.current_year}"
+  name                                 = "synapseworkspace${local.current_year}ch"
   resource_group_name                  = azurerm_resource_group.rg_data_platform.name
   location                             = azurerm_resource_group.rg_data_platform.location
   storage_data_lake_gen2_filesystem_id = azurerm_storage_data_lake_gen2_filesystem.data_lake_fs.id
