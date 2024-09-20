@@ -13,7 +13,7 @@ resource "azurerm_management_group" "test" {
 resource "null_resource" "subscription_association" {
   triggers = {
     management_group_id = azurerm_management_group.prod.id
-    subscription_id     = data.azurerm_client_config.current
+    subscription_id     = data.azurerm_client_config.current.subscription_id
   }
 
   provisioner "local-exec" {

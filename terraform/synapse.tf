@@ -1,6 +1,6 @@
 # Resource Group for production
 resource "azurerm_resource_group" "rg_synapse" {
-  name     = "rgsyn${local.current_year}ch6"
+  name     = "rgsyn${local.current_year}ch"
   location = "West Europe"
 }
 
