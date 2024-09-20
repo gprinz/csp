@@ -148,6 +148,11 @@ resource "azurerm_machine_learning_compute_instance" "ml_compute_instance" {
   identity {
     type = "SystemAssigned"
   }
+
+  assign_to_user {
+    object_id = "ba9ca4ed-3d1c-4910-9a59-4e8910a3eae7"
+  }
+
 }
 
 # Optional: Role assignment for Compute Instance (if needed)
@@ -155,10 +160,4 @@ resource "azurerm_role_assignment" "ml_compute_instance_contributor" {
   principal_id         = azurerm_machine_learning_compute_instance.ml_compute_instance.identity[0].principal_id
   role_definition_name = "Contributor"
   scope                = data.azurerm_subscription.primary.id
-}
-
-resource "azurerm_role_assignment" "ml_compute_user_contributor" {
-  scope                = azurerm_machine_learning_compute_instance.ml_compute_instance.id
-  role_definition_name = "Contributor"
-  principal_id         = "ba9ca4ed-3d1c-4910-9a59-4e8910a3eae7"
 }
