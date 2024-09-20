@@ -137,3 +137,22 @@ resource "azurerm_role_assignment" "ml_workspace_contributor" {
   role_definition_name = "Contributor"
   scope                = data.azurerm_subscription.primary.id
 }
+
+# Machine Learning Compute Instance (VM) for Jupyter Lab
+resource "azurerm_machine_learning_compute_instance" "ml_compute_instance" {
+  name                          = "mlci-${local.current_year}-ch"
+  machine_learning_workspace_id = azurerm_machine_learning_workspace.ml_workspace.id
+  virtual_machine_size          = "Standard_DS3_v2" # VM size suitable for Jupyter Lab
+  authorization_type            = "personal"
+
+  identity {
+    type = "SystemAssigned"
+  }
+}
+
+# Optional: Role assignment for Compute Instance (if needed)
+resource "azurerm_role_assignment" "ml_compute_instance_contributor" {
+  principal_id         = azurerm_machine_learning_compute_instance.ml_compute_instance.identity[0].principal_id
+  role_definition_name = "Contributor"
+  scope                = data.azurerm_subscription.primary.id
+}
