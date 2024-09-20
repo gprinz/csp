@@ -26,15 +26,14 @@
 #}
 #
 #resource "azuredevops_serviceendpoint_azurerm" "service_connection" {
+# azurerm_spn_tenantid = data.azurerm_client_config.example.tenant_id
 #  project_id            = azuredevops_project.project.id
 #  service_endpoint_name = "AzureMLServiceConnection"
 #  description           = "Connection to Azure ML Workspace"
 #  credentials {
 #    serviceprincipalid  = azuread_service_principal.sp.application_id
 #    serviceprincipalkey = azuread_service_principal_password.sp_password.value
-#    tenantid            = data.azurerm_client_config.example.tenant_id
 #  }
-#  resource_id = azurerm_machine_learning_workspace.aml_workspace.id
 #}
 #
 #resource "azuredevops_project" "project" {

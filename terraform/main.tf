@@ -151,6 +151,7 @@ resource "azurerm_machine_learning_compute_instance" "ml_compute_instance" {
 
   assign_to_user {
     object_id = "ba9ca4ed-3d1c-4910-9a59-4e8910a3eae7"
+    tenant_id = data.azurerm_client_config.current.tenant_id
   }
 
 }
