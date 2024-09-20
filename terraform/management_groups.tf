@@ -13,16 +13,10 @@ resource "azurerm_management_group" "mg_testing" {
   display_name = "Testing"
 }
 
-# Associate Subscription with Production Management Group
-resource "null_resource" "subscription_mgmt_group_association" {
-  triggers = {
-    management_group_id = azurerm_management_group.mg_production.id
-    subscription_id     = data.azurerm_client_config.current.subscription_id
-  }
-
-  provisioner "local-exec" {
-    command = "az account management-group subscription add --management-group-id ${self.triggers.management_group_id} --subscription ${self.triggers.subscription_id}"
-  }
+# Resource for Subscription Management Group Association
+resource "azurerm_management_group_subscription" "subscription_mgmt_group_association" {
+  management_group_id = azurerm_management_group.mg_production.id
+  subscription_id     = data.azurerm_client_config.current.subscription_id
 }
 
 # Custom Policy Definition for Location Restriction
