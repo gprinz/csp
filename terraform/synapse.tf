@@ -56,15 +56,9 @@ resource "azurerm_role_assignment" "synapse_contributor_role" {
   principal_id         = azurerm_synapse_workspace.synapse_workspace.identity[0].principal_id
 }
 
-
-# Data source to get the specific AD user
-data "azuread_user" "example_user" {
-  user_principal_name = "raphaelprinz@outlook.com"
-}
-
 # Assign 'Synapse Contributor' role to the user
 resource "azurerm_role_assignment" "synapse_contributor" {
   scope                = azurerm_synapse_workspace.synapse_workspace.id
   role_definition_name = "Synapse Administrator" # You can also use 'Synapse Administrator' or 'SQL Contributor'
-  principal_id         = data.azuread_user.example_user.id
+  principal_id         = "ba9ca4ed-3d1c-4910-9a59-4e8910a3eae7"
 }
