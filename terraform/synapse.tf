@@ -56,9 +56,18 @@ resource "azurerm_role_assignment" "synapse_contributor_role" {
   principal_id         = azurerm_synapse_workspace.synapse_workspace.identity[0].principal_id
 }
 
+resource "azurerm_synapse_firewall_rule" "example" {
+  name                 = "AllowAll"
+  synapse_workspace_id = azurerm_synapse_workspace.synapse_workspace.id
+  start_ip_address     = "0.0.0.0"
+  end_ip_address       = "255.255.255.255"
+}
+
 # Assign 'Synapse Contributor' role to the user
-resource "azurerm_role_assignment" "synapse_contributor" {
-  scope                = azurerm_synapse_workspace.synapse_workspace.id
-  role_definition_name = "Synapse Administrator" # You can also use 'Synapse Administrator' or 'SQL Contributor'
-  principal_id         = "ba9ca4ed-3d1c-4910-9a59-4e8910a3eae7"
+resource "azurerm_synapse_role_assignment" "example" {
+  synapse_workspace_id = azurerm_synapse_workspace.synapse_workspace.id
+  role_name            = "Synapse Administrator"
+  principal_id         = data.azurerm_client_config.current.object_id
+
+  depends_on = [azurerm_synapse_firewall_rule.example]
 }
