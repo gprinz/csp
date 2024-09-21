@@ -67,7 +67,7 @@ resource "azurerm_synapse_firewall_rule" "example" {
 resource "azurerm_synapse_role_assignment" "example" {
   synapse_workspace_id = azurerm_synapse_workspace.synapse_workspace.id
   role_name            = "Synapse Administrator"
-  principal_id         = data.azurerm_client_config.current.object_id
+  principal_id         = "ba9ca4ed-3d1c-4910-9a59-4e8910a3eae7"
 
   depends_on = [azurerm_synapse_firewall_rule.example]
 }
