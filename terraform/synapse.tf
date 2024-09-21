@@ -17,7 +17,7 @@ resource "azurerm_storage_account" "data_lake" {
 
 # Data Lake Gen2 Filesystem configuration
 resource "azurerm_storage_data_lake_gen2_filesystem" "data_lake_fs" {
-  name               = "datalake"
+  name               = "taxi"
   storage_account_id = azurerm_storage_account.data_lake.id
 }
 
