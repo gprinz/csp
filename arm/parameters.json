@@ -6,7 +6,7 @@
             "value": "df-2024-ch"
         },
         "DestinationDataLakeStorage_properties_typeProperties_serviceEndpoint": {
-            "value": "https://sasynapse2024ch.blob.core.windows.net/"
+            "value": "https://sadataplatform2024ch.blob.core.windows.net/"
         },
         "DestinationDataLakeStorage_properties_typeProperties_accountName": {
             "value": "sasynapse2024ch"
