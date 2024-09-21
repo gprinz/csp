@@ -1,2 +1,1 @@
-# csp
-Capstone Project at ETH Zürich
+# Capstone Project at ETH Zürich
