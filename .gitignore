@@ -1,0 +1,64 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg
+*.egg-info/
+dist/
+build/
+*.log
+*.env
+.venv/
+env/
+venv/
+.mypy_cache/
+.pytest_cache/
+*.pyo
+*.pyd
+*.sqlite3
+*.db
+
+# Byte-compiled / optimized / DLL files
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+.Python
+*.pyo
+*.pyd
+*.whl
+*.manifest
+*.spec
+
+# Virtual environment
+.env/
+.venv/
+ENV/
+env/
+venv/
+env.bak/
+
+# Editor and OS-specific files
+*.DS_Store
+*.swp
+*.swo
+.idea/
+.vscode/
+Thumbs.db
+*.bak
+*.tmp
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+crash.log
+*.tfvars
+override.tf
+override.tf.json
+terraform.tfstate.backup
+.terraform.lock.hcl
+
+# ARM templates (Azure Resource Manager)
+*.parameters.json
+*.armtemplate.json
+*.armtemplate.backup

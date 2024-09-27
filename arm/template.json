@@ -7,44 +7,19 @@
             "metadata": "Data Factory name",
             "defaultValue": "df-2024-ch"
         },
-        "DestinationDataLakeStorage_properties_typeProperties_serviceEndpoint": {
-            "type": "string",
-            "defaultValue": "https://sadataplatform2024ch.blob.core.windows.net/"
+        "AzureDataLakeStorage1_accountKey": {
+            "type": "secureString",
+            "metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorage1'"
         },
-        "DestinationDataLakeStorage_properties_typeProperties_accountName": {
+        "AzureDataLakeStorage1_properties_typeProperties_url": {
             "type": "string",
-            "defaultValue": "sasynapse2024ch"
+            "defaultValue": "https://sadataplatform2024ch.dfs.core.windows.net/"
         }
     },
     "variables": {
         "factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
     },
     "resources": [
-        {
-            "name": "[concat(parameters('factoryName'), '/destination_taxi_green')]",
-            "type": "Microsoft.DataFactory/factories/datasets",
-            "apiVersion": "2018-06-01",
-            "properties": {
-                "linkedServiceName": {
-                    "referenceName": "DestinationDataLakeStorage",
-                    "type": "LinkedServiceReference"
-                },
-                "annotations": [],
-                "type": "Parquet",
-                "typeProperties": {
-                    "location": {
-                        "type": "AzureBlobStorageLocation",
-                        "folderPath": "green",
-                        "container": "taxi"
-                    },
-                    "compressionCodec": "snappy"
-                },
-                "schema": []
-            },
-            "dependsOn": [
-                "[concat(variables('factoryId'), '/linkedServices/DestinationDataLakeStorage')]"
-            ]
-        },
         {
             "name": "[concat(parameters('factoryName'), '/source_taxi_green')]",
             "type": "Microsoft.DataFactory/factories/datasets",
@@ -164,53 +139,28 @@
             ]
         },
         {
-            "name": "[concat(parameters('factoryName'), '/destination_taxi_fhv')]",
-            "type": "Microsoft.DataFactory/factories/datasets",
-            "apiVersion": "2018-06-01",
-            "properties": {
-                "linkedServiceName": {
-                    "referenceName": "DestinationDataLakeStorage",
-                    "type": "LinkedServiceReference"
-                },
-                "annotations": [],
-                "type": "Parquet",
-                "typeProperties": {
-                    "location": {
-                        "type": "AzureBlobStorageLocation",
-                        "folderPath": "fhv",
-                        "container": "taxi"
-                    },
-                    "compressionCodec": "snappy"
-                },
-                "schema": []
-            },
-            "dependsOn": [
-                "[concat(variables('factoryId'), '/linkedServices/DestinationDataLakeStorage')]"
-            ]
-        },
-        {
             "name": "[concat(parameters('factoryName'), '/destination_taxi_yellow')]",
             "type": "Microsoft.DataFactory/factories/datasets",
             "apiVersion": "2018-06-01",
             "properties": {
                 "linkedServiceName": {
-                    "referenceName": "DestinationDataLakeStorage",
+                    "referenceName": "AzureDataLakeStorage1",
                     "type": "LinkedServiceReference"
                 },
                 "annotations": [],
                 "type": "Parquet",
                 "typeProperties": {
                     "location": {
-                        "type": "AzureBlobStorageLocation",
+                        "type": "AzureBlobFSLocation",
                         "folderPath": "yellow",
-                        "container": "taxi"
+                        "fileSystem": "taxi"
                     },
                     "compressionCodec": "snappy"
                 },
                 "schema": []
             },
             "dependsOn": [
-                "[concat(variables('factoryId'), '/linkedServices/DestinationDataLakeStorage')]"
+                "[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage1')]"
             ]
         },
         {
@@ -480,6 +430,20 @@
             ]
         },
         {
+            "name": "[concat(parameters('factoryName'), '/OpenDataTaxi')]",
+            "type": "Microsoft.DataFactory/factories/linkedServices",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "annotations": [],
+                "type": "AzureBlobStorage",
+                "typeProperties": {
+                    "containerUri": "https://azureopendatastorage.blob.core.windows.net/nyctlc/",
+                    "authenticationType": "Anonymous"
+                }
+            },
+            "dependsOn": []
+        },
+        {
             "name": "[concat(parameters('factoryName'), '/copy_taxi_green')]",
             "type": "Microsoft.DataFactory/factories/pipelines",
             "apiVersion": "2018-06-01",
@@ -523,8 +487,7 @@
                             "sink": {
                                 "type": "ParquetSink",
                                 "storeSettings": {
-                                    "type": "AzureBlobStorageWriteSettings",
-                                    "blobWriterAddHeader": true,
+                                    "type": "AzureBlobFSWriteSettings",
                                     "copyBehavior": "PreserveHierarchy"
                                 },
                                 "formatSettings": {
@@ -841,7 +804,7 @@
                     "elapsedTimeMetric": {}
                 },
                 "annotations": [],
-                "lastPublishTime": "2024-09-21T10:33:34Z"
+                "lastPublishTime": "2024-09-21T11:59:35Z"
             },
             "dependsOn": [
                 "[concat(variables('factoryId'), '/datasets/source_taxi_green')]",
@@ -892,8 +855,7 @@
                             "sink": {
                                 "type": "ParquetSink",
                                 "storeSettings": {
-                                    "type": "AzureBlobStorageWriteSettings",
-                                    "blobWriterAddHeader": true,
+                                    "type": "AzureBlobFSWriteSettings",
                                     "copyBehavior": "PreserveHierarchy"
                                 },
                                 "formatSettings": {
@@ -924,7 +886,7 @@
                     "elapsedTimeMetric": {}
                 },
                 "annotations": [],
-                "lastPublishTime": "2024-09-21T10:33:34Z"
+                "lastPublishTime": "2024-09-21T11:59:35Z"
             },
             "dependsOn": [
                 "[concat(variables('factoryId'), '/datasets/source_taxi_yellow')]",
@@ -975,8 +937,7 @@
                             "sink": {
                                 "type": "ParquetSink",
                                 "storeSettings": {
-                                    "type": "AzureBlobStorageWriteSettings",
-                                    "blobWriterAddHeader": true,
+                                    "type": "AzureBlobFSWriteSettings",
                                     "copyBehavior": "PreserveHierarchy"
                                 },
                                 "formatSettings": {
@@ -985,7 +946,15 @@
                             },
                             "enableStaging": false,
                             "enableSkipIncompatibleRow": true,
-                            "validateDataConsistency": false
+                            "validateDataConsistency": false,
+                            "translator": {
+                                "type": "TabularTranslator",
+                                "typeConversion": true,
+                                "typeConversionSettings": {
+                                    "allowDataTruncation": true,
+                                    "treatBooleanAsNumber": false
+                                }
+                            }
                         },
                         "inputs": [
                             {
@@ -1007,7 +976,7 @@
                     "elapsedTimeMetric": {}
                 },
                 "annotations": [],
-                "lastPublishTime": "2024-09-21T10:33:34Z"
+                "lastPublishTime": "2024-09-21T11:59:35Z"
             },
             "dependsOn": [
                 "[concat(variables('factoryId'), '/datasets/source_taxi_fhv')]",
@@ -1015,33 +984,104 @@
             ]
         },
         {
-            "name": "[concat(parameters('factoryName'), '/OpenDataTaxi')]",
+            "name": "[concat(parameters('factoryName'), '/AzureDataLakeStorage1')]",
             "type": "Microsoft.DataFactory/factories/linkedServices",
             "apiVersion": "2018-06-01",
             "properties": {
                 "annotations": [],
-                "type": "AzureBlobStorage",
+                "type": "AzureBlobFS",
                 "typeProperties": {
-                    "containerUri": "https://azureopendatastorage.blob.core.windows.net/nyctlc/",
-                    "authenticationType": "Anonymous"
+                    "url": "[parameters('AzureDataLakeStorage1_properties_typeProperties_url')]",
+                    "accountKey": {
+                        "type": "SecureString",
+                        "value": "[parameters('AzureDataLakeStorage1_accountKey')]"
+                    }
                 }
             },
             "dependsOn": []
         },
         {
-            "name": "[concat(parameters('factoryName'), '/DestinationDataLakeStorage')]",
-            "type": "Microsoft.DataFactory/factories/linkedServices",
+            "name": "[concat(parameters('factoryName'), '/destination_taxi_fhv')]",
+            "type": "Microsoft.DataFactory/factories/datasets",
             "apiVersion": "2018-06-01",
             "properties": {
+                "linkedServiceName": {
+                    "referenceName": "AzureDataLakeStorage1",
+                    "type": "LinkedServiceReference"
+                },
                 "annotations": [],
-                "type": "AzureBlobStorage",
+                "type": "Parquet",
                 "typeProperties": {
-                    "serviceEndpoint": "[parameters('DestinationDataLakeStorage_properties_typeProperties_serviceEndpoint')]",
-                    "accountKind": "StorageV2",
-                    "accountName": "[parameters('DestinationDataLakeStorage_properties_typeProperties_accountName')]"
-                }
+                    "location": {
+                        "type": "AzureBlobFSLocation",
+                        "folderPath": "fhv",
+                        "fileSystem": "taxi"
+                    },
+                    "compressionCodec": "snappy"
+                },
+                "schema": [
+                    {
+                        "name": "dispatchBaseNum",
+                        "type": "UTF8"
+                    },
+                    {
+                        "name": "pickupDateTime",
+                        "type": "INT96"
+                    },
+                    {
+                        "name": "dropOffDateTime",
+                        "type": "INT96"
+                    },
+                    {
+                        "name": "puLocationId",
+                        "type": "UTF8"
+                    },
+                    {
+                        "name": "doLocationId",
+                        "type": "UTF8"
+                    },
+                    {
+                        "name": "srFlag",
+                        "type": "UTF8"
+                    },
+                    {
+                        "name": "puYear",
+                        "type": "UTF8"
+                    },
+                    {
+                        "name": "puMonth",
+                        "type": "UTF8"
+                    }
+                ]
             },
-            "dependsOn": []
+            "dependsOn": [
+                "[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage1')]"
+            ]
+        },
+        {
+            "name": "[concat(parameters('factoryName'), '/destination_taxi_green')]",
+            "type": "Microsoft.DataFactory/factories/datasets",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "linkedServiceName": {
+                    "referenceName": "AzureDataLakeStorage1",
+                    "type": "LinkedServiceReference"
+                },
+                "annotations": [],
+                "type": "Parquet",
+                "typeProperties": {
+                    "location": {
+                        "type": "AzureBlobFSLocation",
+                        "folderPath": "green",
+                        "fileSystem": "taxi"
+                    },
+                    "compressionCodec": "snappy"
+                },
+                "schema": []
+            },
+            "dependsOn": [
+                "[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage1')]"
+            ]
         }
     ]
 }

@@ -5,11 +5,11 @@
         "factoryName": {
             "value": "df-2024-ch"
         },
-        "DestinationDataLakeStorage_properties_typeProperties_serviceEndpoint": {
-            "value": "https://sadataplatform2024ch.blob.core.windows.net/"
+        "AzureDataLakeStorage1_accountKey": {
+            "value": ""
         },
-        "DestinationDataLakeStorage_properties_typeProperties_accountName": {
-            "value": "sasynapse2024ch"
+        "AzureDataLakeStorage1_properties_typeProperties_url": {
+            "value": "https://sadataplatform2024ch.dfs.core.windows.net/"
         }
     }
 }
